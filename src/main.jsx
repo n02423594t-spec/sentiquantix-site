@@ -144,13 +144,29 @@ const partners = [
 
 const corporateSummary = [
   { label: 'Company Name', value: 'Pedasenticom' },
-  { label: 'Flagship Product', value: 'Formerly known as Edu-Connect, to be named Pedacom' },
-  { label: 'Industry Sector', value: 'Educational Technology (EdTech) & School Payments' },
+  {
+    label: 'Company Registration',
+    value: 'Registered in Zimbabwe under CIPZ (Companies and Intellectual Property Zimbabwe)',
+  },
+  { label: 'Core Focus & Sector', value: 'Education & Technology (EdTech) & School Payments' },
+  { label: 'Flagship Product', value: 'Edu-Connect (to be named Pedacom)' },
   { label: 'Primary Platforms', value: 'Administrative Web Portal & Android Mobile Application' },
   {
     label: 'Web Portal Address',
     value: 'admin.chewetechnologies.co.zw',
     href: 'https://admin.chewetechnologies.co.zw',
+  },
+  {
+    label: 'Company Email',
+    value: 'Pedasenticom@gmail.com',
+    href: 'mailto:Pedasenticom@gmail.com',
+    external: false,
+  },
+  {
+    label: 'Company Contact',
+    value: '0790543013',
+    href: 'tel:+263790543013',
+    external: false,
   },
   {
     label: 'Development Team',
@@ -182,7 +198,7 @@ function App() {
               <span className="brand-name">
                 Pedasenticom<span className="brand-dot">.</span>
               </span>
-              <span className="brand-sub">Pedacom EdTech Ecosystem</span>
+              <span className="brand-sub">Education &amp; Technology · Zimbabwe</span>
             </span>
           </a>
 
@@ -214,17 +230,17 @@ function App() {
         <section className="hero container">
           <div className="hero-copy">
             <p className="eyebrow">
-              <span className="eyebrow-line" /> Corporate &amp; Product Profile · EdTech &amp; School Payments
+              <span className="eyebrow-line" /> Education &amp; Technology · Registered in Zimbabwe under CIPZ
             </p>
             <h1>
               Connecting home<br />
               &amp; school <em>digitally.</em>
             </h1>
             <p className="hero-description">
-              Through our flagship app—formerly known as <em>Edu-Connect</em>, to be named{' '}
-              <strong>Pedacom</strong>—Pedasenticom delivers integrated digital infrastructure that
-              streamlines school administration, classroom engagement, and multi-currency USD &amp; ZiG
-              EcoCash payments across Zimbabwe and Southern Africa.
+              <strong>Pedasenticom</strong> is an education and technology company registered in Zimbabwe
+              under <strong>CIPZ</strong>. Through our flagship product—<strong>Edu-Connect</strong> (to be
+              named <strong>Pedacom</strong>)—we deliver integrated digital infrastructure that streamlines
+              school administration, classroom engagement, and multi-currency USD &amp; ZiG EcoCash payments.
             </p>
             <div className="hero-actions">
               <a
@@ -260,7 +276,7 @@ function App() {
             <div className="visual-grid" />
             <div className="visual-glow" />
             <div className="visual-note note-top">
-              <span className="pulse" /> Edu-Connect · To Be Named Pedacom
+              <span className="pulse" /> Flagship Product: Edu-Connect (Pedacom)
             </div>
             <div className="logo-stage">
               <img
@@ -281,10 +297,10 @@ function App() {
             <div className="intro-sidebar">
               <p className="section-kicker">01 / Executive Summary</p>
               <div className="pedacom-badge">
-                <span className="pedacom-badge-eyebrow">Flagship App</span>
-                <strong className="pedacom-badge-title">PEDACOM</strong>
-                <span className="pedacom-badge-sub">Connecting Home &amp; School</span>
-                <span className="pedacom-badge-note">Formerly known as Edu-Connect, to be named Pedacom</span>
+                <span className="pedacom-badge-eyebrow">Flagship Product</span>
+                <strong className="pedacom-badge-title">EDU-CONNECT</strong>
+                <span className="pedacom-badge-sub">To be named Pedacom</span>
+                <span className="pedacom-badge-note">Connecting Home &amp; School</span>
               </div>
             </div>
             <div className="intro-body">
@@ -292,11 +308,12 @@ function App() {
                 A unified school-to-home <span>digital ecosystem.</span>
               </h2>
               <p>
-                <strong>Pedasenticom</strong> is an educational technology company dedicated to bridging the
-                operational and communication gap between schools, educators, and families. Through our flagship
-                app—formerly known as <em>Edu-Connect</em>, to be named <strong>Pedacom</strong>—we deliver a
-                unified school-to-home digital ecosystem engineered to streamline school administration,
-                classroom engagement, and parent-teacher collaboration.
+                <strong>Pedasenticom</strong> is an education and technology company registered in Zimbabwe
+                under <strong>CIPZ</strong> (Companies and Intellectual Property Zimbabwe), dedicated to
+                bridging the operational and communication gap between schools, educators, and families.
+                Through our flagship product—<strong>Edu-Connect</strong> (to be named{' '}
+                <strong>Pedacom</strong>)—we deliver a unified school-to-home digital ecosystem engineered to
+                streamline school administration, classroom engagement, and parent-teacher collaboration.
               </p>
               <p>
                 Developed by Senior Software Engineer <strong>Jefter Tokomere</strong> at{' '}
@@ -519,7 +536,12 @@ function App() {
                   <dt>{row.label}</dt>
                   <dd>
                     {row.href ? (
-                      <a href={row.href} target="_blank" rel="noreferrer" className="summary-link">
+                      <a
+                        href={row.href}
+                        target={row.external === false ? undefined : '_blank'}
+                        rel={row.external === false ? undefined : 'noreferrer'}
+                        className="summary-link"
+                      >
                         {row.value} <ArrowUpRight size={15} />
                       </a>
                     ) : (
@@ -536,17 +558,18 @@ function App() {
         <section className="contact container" id="contact">
           <p className="section-kicker">06 / Onboard Your School</p>
           <h2>
-            Bring Pedacom to<br />
+            Bring Edu-Connect to<br />
             <em>your community.</em>
           </h2>
           <p className="contact-lead">
-            Partner with Pedasenticom to deploy unified school administration, parent engagement, and
-            USD/ZiG EcoCash fee collection for your primary or secondary institution.
+            Partner with Pedasenticom—Zimbabwe&apos;s CIPZ-registered education and technology company—to
+            deploy unified school administration, parent engagement, and USD/ZiG EcoCash fee collection for
+            your primary or secondary institution.
           </p>
 
           <div className="contact-links">
-            <a className="contact-email" href="mailto:Tawanakelvinchawanda@gmail.com">
-              Tawanakelvinchawanda@gmail.com <ArrowUpRight size={24} />
+            <a className="contact-email" href="mailto:Pedasenticom@gmail.com">
+              Pedasenticom@gmail.com <ArrowUpRight size={24} />
             </a>
             <a
               className="button button-dark"
@@ -559,7 +582,7 @@ function App() {
           </div>
 
           <div className="contact-meta">
-            <span>Harare, Zimbabwe · Serving Southern Africa</span>
+            <span>Harare, Zimbabwe · Registered under CIPZ</span>
             <div className="phone-actions">
               <button
                 className="phone-trigger"
@@ -567,7 +590,7 @@ function App() {
                 onClick={() => setContactOpen(!contactOpen)}
                 aria-expanded={contactOpen}
               >
-                +263 790 543 013
+                0790543013
               </button>
               {contactOpen && (
                 <div className="phone-options">
@@ -594,7 +617,7 @@ function App() {
             </span>
           </a>
           <span className="footer-tagline">
-            Connecting Home &amp; School Through Integrated Digital Infrastructure
+            Education &amp; Technology · Registered in Zimbabwe under CIPZ
           </span>
           <a
             className="footer-portal"
