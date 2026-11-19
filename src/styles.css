@@ -1385,3 +1385,442 @@ h2 {
     gap: 12px;
   }
 }
+
+/* ==========================================================================
+   Cinematic Logo Intro Loader (Hexagonal Energy Trace & Curtain Reveal)
+   ========================================================================== */
+
+.intro-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  user-select: none;
+}
+
+.intro-loader.is-exiting {
+  pointer-events: none;
+}
+
+.intro-curtain {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.5%;
+  background-color: #020813;
+  transition: transform 0.72s cubic-bezier(0.76, 0, 0.24, 1);
+  will-change: transform;
+}
+
+.intro-curtain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.14;
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.28) 1px, transparent 1px);
+  background-size: 64px 64px;
+  pointer-events: none;
+}
+
+.intro-curtain-top {
+  top: 0;
+  background-image: radial-gradient(circle at 50% 100%, rgba(18, 59, 114, 0.55) 0%, #020813 68%);
+}
+
+.intro-curtain-bottom {
+  bottom: 0;
+  background-image: radial-gradient(circle at 50% 0%, rgba(18, 59, 114, 0.55) 0%, #020813 68%);
+}
+
+.intro-loader.is-exiting .intro-curtain-top {
+  transform: translateY(-102%);
+}
+
+.intro-loader.is-exiting .intro-curtain-bottom {
+  transform: translateY(102%);
+}
+
+.intro-seam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1.5px;
+  z-index: 2;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.9), rgba(224, 180, 92, 0.85), rgba(56, 189, 248, 0.9), transparent);
+  transform: scaleX(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-loader.is-exiting .intro-seam {
+  animation: introSeamFlash 0.52s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.intro-stage {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 24px;
+  transition: opacity 0.34s ease, transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.intro-loader.is-exiting .intro-stage {
+  opacity: 0;
+  transform: scale(1.06);
+}
+
+.intro-emblem-wrap {
+  position: relative;
+  width: 212px;
+  height: 212px;
+  display: grid;
+  place-items: center;
+}
+
+.intro-ripple {
+  position: absolute;
+  inset: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  opacity: 0;
+  animation: introRipple 2.1s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.intro-ripple.ripple-two {
+  animation-delay: 0.72s;
+  border-color: rgba(224, 180, 92, 0.32);
+}
+
+.intro-orbit {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  border-top-color: rgba(56, 189, 248, 0.45);
+  border-bottom-color: rgba(224, 180, 92, 0.35);
+  animation: introOrbitSpin 6.5s linear infinite;
+}
+
+.intro-hex-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.45));
+}
+
+.intro-hex-outer {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: introHexTrace 1.05s cubic-bezier(0.65, 0, 0.35, 1) 0.08s forwards;
+}
+
+.intro-hex-inner {
+  stroke-dasharray: 100;
+  stroke-dashoffset: -100;
+  animation: introHexTraceReverse 1.05s cubic-bezier(0.65, 0, 0.35, 1) 0.22s forwards;
+}
+
+.intro-hex-node {
+  fill: #e0f2fe;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: introNodePop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.intro-crest-frame {
+  position: relative;
+  width: 146px;
+  height: 146px;
+  clip-path: polygon(50% 2%, 94% 26%, 94% 74%, 50% 98%, 6% 74%, 6% 26%);
+  overflow: hidden;
+  background: #040d1d;
+  opacity: 0;
+  transform: scale(0.82);
+  animation: introCrestReveal 0.82s cubic-bezier(0.16, 1, 0.3, 1) 0.32s forwards;
+}
+
+.intro-crest-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.06) brightness(1.06);
+}
+
+.intro-crest-sheen {
+  position: absolute;
+  inset: -40%;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.42) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%) skewX(-18deg);
+  animation: introSheenSweep 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1.02s forwards;
+}
+
+.intro-wordmark {
+  margin-top: 26px;
+}
+
+.intro-title-mask {
+  overflow: hidden;
+  padding: 2px 0;
+}
+
+.intro-title {
+  display: inline-block;
+  color: #ffffff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(24px, 5vw, 34px);
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  padding-left: 0.24em;
+  opacity: 0;
+  transform: translateY(110%);
+  animation: introTitleRise 0.72s cubic-bezier(0.16, 1, 0.3, 1) 0.68s forwards;
+}
+
+.intro-title-accent {
+  background: linear-gradient(90deg, #7dd3fc 0%, #38bdf8 60%, #e0b45c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.intro-slogan {
+  margin: 10px 0 0;
+  font: 500 clamp(9.5px, 2vw, 11px) 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #9dc5e6;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: introSloganFade 0.62s ease 0.96s forwards;
+}
+
+.intro-progress {
+  margin-top: 26px;
+  width: min(230px, 64vw);
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(148, 184, 224, 0.16);
+  overflow: hidden;
+}
+
+.intro-progress-bar {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1d4ed8 0%, #38bdf8 62%, #e0b45c 100%);
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: introProgressFill 2.05s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+}
+
+.intro-skip {
+  position: absolute;
+  right: 28px;
+  bottom: 24px;
+  z-index: 4;
+  border: 1px solid rgba(148, 184, 224, 0.24);
+  border-radius: 999px;
+  padding: 7px 14px;
+  background: rgba(6, 17, 33, 0.65);
+  color: #9dc5e6;
+  font: 500 10.5px 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.25s ease, border-color 0.2s ease, color 0.2s ease;
+  animation: introSkipFade 0.4s ease 0.65s forwards;
+}
+
+.intro-skip:hover {
+  border-color: rgba(56, 189, 248, 0.65);
+  color: #ffffff;
+}
+
+.intro-loader.is-exiting .intro-skip {
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes introHexTrace {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes introHexTraceReverse {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes introNodePop {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes introCrestReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes introSheenSweep {
+  0% {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(150%) skewX(-18deg);
+  }
+}
+
+@keyframes introRipple {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.76);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.48);
+  }
+}
+
+@keyframes introOrbitSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes introTitleRise {
+  0% {
+    opacity: 0;
+    transform: translateY(110%);
+    letter-spacing: 0.34em;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: 0.22em;
+  }
+}
+
+@keyframes introSloganFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes introProgressFill {
+  0% {
+    transform: scaleX(0);
+  }
+  60% {
+    transform: scaleX(0.76);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes introSeamFlash {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  45% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1.04);
+    opacity: 0;
+  }
+}
+
+@keyframes introSkipFade {
+  to {
+    opacity: 0.72;
+  }
+}
+
+@media (max-width: 760px) {
+  .intro-emblem-wrap {
+    width: 176px;
+    height: 176px;
+  }
+
+  .intro-crest-frame {
+    width: 120px;
+    height: 120px;
+  }
+
+  .intro-skip {
+    right: 18px;
+    bottom: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-ripple,
+  .intro-orbit,
+  .intro-crest-sheen {
+    display: none;
+  }
+
+  .intro-hex-outer,
+  .intro-hex-inner {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+
+  .intro-hex-node,
+  .intro-crest-frame,
+  .intro-title,
+  .intro-slogan,
+  .intro-progress-bar {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .intro-loader {
+    transition: opacity 0.32s ease;
+  }
+
+  .intro-loader.is-exiting {
+    opacity: 0;
+  }
+
+  .intro-loader.is-exiting .intro-curtain-top,
+  .intro-loader.is-exiting .intro-curtain-bottom {
+    transform: none;
+  }
+}

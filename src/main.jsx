@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
   ArrowUpRight,
@@ -31,7 +31,7 @@ const architectureComponents = [
   {
     number: '02',
     name: 'Android Mobile App',
-    subtitle: 'Pedacom Mobile (formerly Edu-Connect)',
+    subtitle: 'Edu-Connect Mobile (to be named Pedacom)',
     targetUsers: 'Teachers & Parents / Guardians',
     icon: Smartphone,
     description:
@@ -165,6 +165,177 @@ const corporateSummary = [
   },
 ]
 
+const hexNodes = [
+  { cx: 100, cy: 12 },
+  { cx: 176.2, cy: 56 },
+  { cx: 176.2, cy: 144 },
+  { cx: 100, cy: 188 },
+  { cx: 23.8, cy: 144 },
+  { cx: 23.8, cy: 56 },
+]
+
+function IntroLoader() {
+  const [phase, setPhase] = useState('active')
+  const exitTimerRef = useRef(null)
+  const doneTimerRef = useRef(null)
+  const safetyTimerRef = useRef(null)
+
+  const beginExit = (exitDuration = 760) => {
+    setPhase((current) => {
+      if (current !== 'active') return current
+      doneTimerRef.current = window.setTimeout(() => {
+        setPhase('done')
+      }, exitDuration)
+      return 'exiting'
+    })
+  }
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const minDuration = reducedMotion ? 450 : 2300
+    const exitDuration = reducedMotion ? 320 : 760
+
+    let minElapsed = false
+    let pageLoaded = document.readyState === 'complete'
+
+    const tryFinish = () => {
+      if (minElapsed && pageLoaded) {
+        beginExit(exitDuration)
+      }
+    }
+
+    const onWindowLoad = () => {
+      pageLoaded = true
+      tryFinish()
+    }
+
+    if (!pageLoaded) {
+      window.addEventListener('load', onWindowLoad)
+    }
+
+    exitTimerRef.current = window.setTimeout(() => {
+      minElapsed = true
+      tryFinish()
+    }, minDuration)
+
+    safetyTimerRef.current = window.setTimeout(() => {
+      beginExit(exitDuration)
+    }, reducedMotion ? 900 : 4200)
+
+    return () => {
+      window.removeEventListener('load', onWindowLoad)
+      window.clearTimeout(exitTimerRef.current)
+      window.clearTimeout(doneTimerRef.current)
+      window.clearTimeout(safetyTimerRef.current)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (phase === 'active') {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [phase])
+
+  if (phase === 'done') return null
+
+  return (
+    <div
+      className={`intro-loader ${phase === 'exiting' ? 'is-exiting' : ''}`}
+      role="status"
+      aria-live="polite"
+      aria-label="Loading Pedasenticom"
+    >
+      <div className="intro-curtain intro-curtain-top" aria-hidden="true" />
+      <div className="intro-curtain intro-curtain-bottom" aria-hidden="true" />
+      <div className="intro-seam" aria-hidden="true" />
+
+      <div className="intro-stage">
+        <div className="intro-emblem-wrap">
+          <span className="intro-ripple ripple-one" aria-hidden="true" />
+          <span className="intro-ripple ripple-two" aria-hidden="true" />
+          <span className="intro-orbit" aria-hidden="true" />
+
+          <svg
+            className="intro-hex-svg"
+            viewBox="0 0 200 200"
+            fill="none"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="pedasenticomHexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#38bdf8" />
+                <stop offset="55%" stopColor="#bae6fd" />
+                <stop offset="100%" stopColor="#e0b45c" />
+              </linearGradient>
+            </defs>
+            <polygon
+              className="intro-hex-outer"
+              points="100,12 176.2,56 176.2,144 100,188 23.8,144 23.8,56"
+              pathLength="100"
+              stroke="url(#pedasenticomHexGrad)"
+              strokeWidth="2.4"
+              strokeLinejoin="round"
+            />
+            <polygon
+              className="intro-hex-inner"
+              points="100,24 165.8,62 165.8,138 100,176 34.2,138 34.2,62"
+              pathLength="100"
+              stroke="rgba(56, 189, 248, 0.36)"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
+            />
+            {hexNodes.map((node, index) => (
+              <circle
+                key={index}
+                className="intro-hex-node"
+                cx={node.cx}
+                cy={node.cy}
+                r="3.2"
+                style={{ animationDelay: `${0.16 + index * 0.1}s` }}
+              />
+            ))}
+          </svg>
+
+          <div className="intro-crest-frame">
+            <img src="/pedasenticom-mark.png" alt="Pedasenticom crest" />
+            <span className="intro-crest-sheen" aria-hidden="true" />
+          </div>
+        </div>
+
+        <div className="intro-wordmark">
+          <div className="intro-title-mask">
+            <span className="intro-title">
+              PEDA<span className="intro-title-accent">SENTICOM</span>
+            </span>
+          </div>
+          <p className="intro-slogan">Inspired to Advance Your Global Reach</p>
+        </div>
+
+        <div className="intro-progress" aria-hidden="true">
+          <div className="intro-progress-bar" />
+        </div>
+      </div>
+
+      <button
+        type="button"
+        className="intro-skip"
+        onClick={() => {
+          window.clearTimeout(exitTimerRef.current)
+          window.clearTimeout(safetyTimerRef.current)
+          beginExit(620)
+        }}
+      >
+        Skip intro
+      </button>
+    </div>
+  )
+}
+
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [contactOpen, setContactOpen] = useState(false)
@@ -179,6 +350,7 @@ function App() {
 
   return (
     <div className="site-shell" id="top">
+      <IntroLoader />
       <header className="nav-wrap">
         <nav className="nav container" aria-label="Primary navigation">
           <a className="brand" href="#top" onClick={closeMenu}>
