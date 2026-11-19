@@ -120,15 +120,12 @@ const stakeholders = [
 
 const partners = [
   {
-    name: 'Teramark Technologies',
-    role: 'Engineering Partner',
+    name: 'Split Technologies',
+    role: 'Engineering & Digital Infrastructure Partner',
     description:
-      'Led by Senior Software Engineer Jefter Tokomere, delivering enterprise software architecture, mobile engineering, and system security.',
-  },
-  {
-    name: 'Chewe Technologies',
-    role: 'Hosting & Ecosystem Partner',
-    description: 'Providing cloud portal infrastructure and digital platform support.',
+      'Turning ambitious ideas into resilient digital systems, cloud-native backends, and high-performance web and mobile applications engineered for clarity, speed, and scale.',
+    href: 'https://splittechnologies.co.zw',
+    linkLabel: 'splittechnologies.co.zw',
   },
   {
     name: 'EcoCash',
@@ -161,7 +158,8 @@ const corporateSummary = [
   },
   {
     label: 'Development Team',
-    value: 'Jefter Tokomere (Senior Software Engineer, Teramark Technologies)',
+    value: 'Split Technologies (splittechnologies.co.zw)',
+    href: 'https://splittechnologies.co.zw',
   },
 ]
 
@@ -474,12 +472,11 @@ function App() {
                 streamline school administration, classroom engagement, and parent-teacher collaboration.
               </p>
               <p>
-                Developed by Senior Software Engineer <strong>Jefter Tokomere</strong> at{' '}
-                <strong>Teramark Technologies</strong> in collaboration with <strong>Chewe Technologies</strong>,
-                Pedasenticom combines an administrative web portal with a dedicated Android mobile application.
-                Schools manage attendance, academic records, multi-currency fee balances, and online uniform
-                stores from a central dashboard, while parents monitor their children&apos;s daily progress and
-                complete payments from their mobile devices.
+                Engineered in partnership with <strong>Split Technologies</strong>, Pedasenticom combines an
+                administrative web portal with a dedicated Android mobile application. Schools manage
+                attendance, academic records, multi-currency fee balances, and online uniform stores from a
+                central dashboard, while parents monitor their children&apos;s daily progress and complete
+                payments from their mobile devices.
               </p>
 
               <blockquote className="mission-callout">
