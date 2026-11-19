@@ -21,8 +21,7 @@ const architectureComponents = [
   {
     number: '01',
     name: 'Web Portal',
-    subtitle: 'admin.chewetechnologies.co.zw',
-    href: 'https://admin.chewetechnologies.co.zw',
+    subtitle: 'Administrative Dashboard',
     targetUsers: 'Platform Owners & School Admins',
     icon: Globe,
     description:
@@ -129,10 +128,7 @@ const partners = [
   {
     name: 'Chewe Technologies',
     role: 'Hosting & Ecosystem Partner',
-    description:
-      'Providing cloud portal infrastructure at admin.chewetechnologies.co.zw and digital platform support.',
-    href: 'https://admin.chewetechnologies.co.zw',
-    linkLabel: 'admin.chewetechnologies.co.zw',
+    description: 'Providing cloud portal infrastructure and digital platform support.',
   },
   {
     name: 'EcoCash',
@@ -151,11 +147,6 @@ const corporateSummary = [
   { label: 'Core Focus & Sector', value: 'Education & Technology (EdTech) & School Payments' },
   { label: 'Flagship Product', value: 'Edu-Connect (to be named Pedacom)' },
   { label: 'Primary Platforms', value: 'Administrative Web Portal & Android Mobile Application' },
-  {
-    label: 'Web Portal Address',
-    value: 'admin.chewetechnologies.co.zw',
-    href: 'https://admin.chewetechnologies.co.zw',
-  },
   {
     label: 'Company Email',
     value: 'Pedasenticom@gmail.com',
@@ -243,13 +234,8 @@ function App() {
               school administration, classroom engagement, and multi-currency USD &amp; ZiG EcoCash payments.
             </p>
             <div className="hero-actions">
-              <a
-                className="button button-dark"
-                href="https://admin.chewetechnologies.co.zw"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Open Web Portal <ArrowUpRight size={18} />
+              <a className="button button-dark" href="#contact">
+                Partner with us <ArrowUpRight size={18} />
               </a>
               <a className="text-link" href="#platform">
                 Explore architecture <ChevronDown size={16} />
@@ -571,14 +557,6 @@ function App() {
             <a className="contact-email" href="mailto:Pedasenticom@gmail.com">
               Pedasenticom@gmail.com <ArrowUpRight size={24} />
             </a>
-            <a
-              className="button button-dark"
-              href="https://admin.chewetechnologies.co.zw"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Launch Admin Portal <ArrowUpRight size={18} />
-            </a>
           </div>
 
           <div className="contact-meta">
@@ -619,13 +597,8 @@ function App() {
           <span className="footer-tagline">
             Education &amp; Technology · Registered in Zimbabwe under CIPZ
           </span>
-          <a
-            className="footer-portal"
-            href="https://admin.chewetechnologies.co.zw"
-            target="_blank"
-            rel="noreferrer"
-          >
-            admin.chewetechnologies.co.zw <ArrowUpRight size={14} />
+          <a className="footer-portal" href="mailto:Pedasenticom@gmail.com">
+            Pedasenticom@gmail.com <ArrowUpRight size={14} />
           </a>
         </div>
       </footer>
