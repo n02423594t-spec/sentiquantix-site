@@ -32,7 +32,7 @@ const architectureComponents = [
   {
     number: '02',
     name: 'Android Mobile App',
-    subtitle: 'Pedacom Mobile',
+    subtitle: 'Pedacom Mobile (formerly Edu-Connect)',
     targetUsers: 'Teachers & Parents / Guardians',
     icon: Smartphone,
     description:
@@ -52,12 +52,12 @@ const architectureComponents = [
   {
     number: '04',
     name: 'Payment Gateway',
-    subtitle: 'PesePay Integration',
+    subtitle: 'EcoCash Integration',
     targetUsers: 'Parents & School Finance',
     icon: CreditCard,
     description:
-      'Processes secure online payments in both USD and ZiG, supported by a dedicated background payment worker that verifies and reconciles order statuses automatically.',
-    tags: ['USD & ZiG', 'PesePay', 'Auto-reconciliation', 'Payment worker'],
+      'Processes secure online payments in both USD and ZiG through EcoCash, supported by a dedicated background payment worker that verifies and reconciles order statuses automatically.',
+    tags: ['USD & ZiG', 'EcoCash', 'Auto-reconciliation', 'Payment worker'],
   },
 ]
 
@@ -75,7 +75,7 @@ const stakeholders = [
       },
       {
         heading: 'Multi-Currency Fee & Store Operations',
-        text: 'Track tuition balances in USD and ZiG and operate a digital uniform shop with automated PesePay payment confirmation.',
+        text: 'Track tuition balances in USD and ZiG and operate a digital uniform shop with automated EcoCash payment confirmation.',
       },
       {
         heading: 'Strict Data Governance',
@@ -135,16 +135,16 @@ const partners = [
     linkLabel: 'admin.chewetechnologies.co.zw',
   },
   {
-    name: 'PesePay',
+    name: 'EcoCash',
     role: 'Payment Infrastructure',
     description:
-      "Zimbabwe's online payment gateway enabling secure local and international transactions directly within the mobile application.",
+      "Zimbabwe's leading mobile money payment gateway enabling secure local USD and ZiG transactions directly within the mobile application.",
   },
 ]
 
 const corporateSummary = [
   { label: 'Company Name', value: 'Pedasenticom' },
-  { label: 'Flagship Product', value: 'Pedacom (formerly Edu+Connect)' },
+  { label: 'Flagship Product', value: 'Formerly known as Edu-Connect, to be named Pedacom' },
   { label: 'Industry Sector', value: 'Educational Technology (EdTech) & School Payments' },
   { label: 'Primary Platforms', value: 'Administrative Web Portal & Android Mobile Application' },
   {
@@ -221,9 +221,10 @@ function App() {
               &amp; school <em>digitally.</em>
             </h1>
             <p className="hero-description">
-              Through our flagship platform, <strong>Pedacom</strong> (formerly <em>Edu+Connect</em>),
-              Pedasenticom delivers integrated digital infrastructure that streamlines school administration,
-              classroom engagement, and multi-currency USD &amp; ZiG payments across Zimbabwe and Southern Africa.
+              Through our flagship app—formerly known as <em>Edu-Connect</em>, to be named{' '}
+              <strong>Pedacom</strong>—Pedasenticom delivers integrated digital infrastructure that
+              streamlines school administration, classroom engagement, and multi-currency USD &amp; ZiG
+              EcoCash payments across Zimbabwe and Southern Africa.
             </p>
             <div className="hero-actions">
               <a
@@ -242,15 +243,15 @@ function App() {
             <div className="hero-metrics" aria-label="Platform highlights">
               <div className="metric-item">
                 <span className="metric-value">USD &amp; ZiG</span>
-                <span className="metric-label">PesePay Gateway</span>
+                <span className="metric-label">EcoCash Gateway</span>
               </div>
               <div className="metric-item">
                 <span className="metric-value">5-Role RBAC</span>
                 <span className="metric-label">Multi-Tenant Cloud</span>
               </div>
               <div className="metric-item">
-                <span className="metric-value">Live Pilot</span>
-                <span className="metric-label">Hillside Primary</span>
+                <span className="metric-value">Web &amp; Android</span>
+                <span className="metric-label">Unified Ecosystem</span>
               </div>
             </div>
           </div>
@@ -259,7 +260,7 @@ function App() {
             <div className="visual-grid" />
             <div className="visual-glow" />
             <div className="visual-note note-top">
-              <span className="pulse" /> Flagship Platform: Pedacom
+              <span className="pulse" /> Edu-Connect · To Be Named Pedacom
             </div>
             <div className="logo-stage">
               <img
@@ -280,10 +281,10 @@ function App() {
             <div className="intro-sidebar">
               <p className="section-kicker">01 / Executive Summary</p>
               <div className="pedacom-badge">
-                <span className="pedacom-badge-eyebrow">Flagship Product</span>
+                <span className="pedacom-badge-eyebrow">Flagship App</span>
                 <strong className="pedacom-badge-title">PEDACOM</strong>
                 <span className="pedacom-badge-sub">Connecting Home &amp; School</span>
-                <span className="pedacom-badge-note">Formerly Edu+Connect</span>
+                <span className="pedacom-badge-note">Formerly known as Edu-Connect, to be named Pedacom</span>
               </div>
             </div>
             <div className="intro-body">
@@ -293,9 +294,9 @@ function App() {
               <p>
                 <strong>Pedasenticom</strong> is an educational technology company dedicated to bridging the
                 operational and communication gap between schools, educators, and families. Through our flagship
-                platform, <strong>Pedacom</strong> (formerly <em>Edu+Connect</em>), we deliver a unified
-                school-to-home digital ecosystem engineered to streamline school administration, classroom
-                engagement, and parent-teacher collaboration.
+                app—formerly known as <em>Edu-Connect</em>, to be named <strong>Pedacom</strong>—we deliver a
+                unified school-to-home digital ecosystem engineered to streamline school administration,
+                classroom engagement, and parent-teacher collaboration.
               </p>
               <p>
                 Developed by Senior Software Engineer <strong>Jefter Tokomere</strong> at{' '}
@@ -441,31 +442,31 @@ function App() {
           </div>
         </section>
 
-        {/* 04 / DEPLOYMENT TRACTION & TECHNOLOGY PARTNERS */}
+        {/* 04 / SCALABILITY & TECHNOLOGY PARTNERS */}
         <section className="partners-band" id="partners">
           <div className="container">
             <div className="partners-top">
               <div>
-                <p className="section-kicker light">04 / Traction &amp; Partners</p>
+                <p className="section-kicker light">04 / Scalability &amp; Partners</p>
                 <h2>
-                  Live in schools.<br />
-                  <span>Built with trusted partners.</span>
+                  Built to scale.<br />
+                  <span>Backed by trusted partners.</span>
                 </h2>
               </div>
 
               <div className="deployment-card">
                 <div className="deployment-badge">
-                  <span className="pulse" /> Active Deployment
+                  <span className="pulse" /> Multi-Tenant Cloud
                 </div>
-                <h3>Hillside Primary School</h3>
+                <h3>Primary &amp; Secondary Schools</h3>
                 <p>
-                  Pedasenticom&apos;s platform is actively deployed at{' '}
-                  <strong>Hillside Primary School</strong>, demonstrating live classroom management, parent
-                  engagement, and sandbox payment workflows. Its multi-tenant architecture is engineered to
-                  onboard additional primary and secondary schools without requiring separate infrastructure.
+                  Pedasenticom&apos;s multi-tenant cloud architecture is engineered to onboard primary and
+                  secondary schools across Zimbabwe and Southern Africa without requiring separate
+                  infrastructure—delivering unified classroom management, real-time parent engagement, and
+                  secure EcoCash payment workflows.
                 </p>
                 <div className="deployment-pillars">
-                  <span><ShieldCheck size={15} /> Live classroom management</span>
+                  <span><ShieldCheck size={15} /> Classroom management</span>
                   <span><ShieldCheck size={15} /> Parent engagement</span>
                   <span><ShieldCheck size={15} /> Multi-school ready</span>
                 </div>
@@ -540,7 +541,7 @@ function App() {
           </h2>
           <p className="contact-lead">
             Partner with Pedasenticom to deploy unified school administration, parent engagement, and
-            USD/ZiG PesePay fee collection for your primary or secondary institution.
+            USD/ZiG EcoCash fee collection for your primary or secondary institution.
           </p>
 
           <div className="contact-links">
