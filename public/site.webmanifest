@@ -1,0 +1,19 @@
+{
+  "name": "Pedasenticom — Education & Technology Zimbabwe",
+  "short_name": "Pedasenticom",
+  "description": "CIPZ-registered education and technology company in Zimbabwe delivering Edu-Connect (Pedacom) for school administration, classroom engagement, and USD/ZiG EcoCash payments.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f6fa",
+  "theme_color": "#061121",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/pedasenticom-mark.png",
+      "sizes": "360x360",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
