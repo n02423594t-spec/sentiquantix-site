@@ -1,117 +1,159 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
   ArrowUpRight,
-  BookOpen,
-  Building2,
-  Check,
   ChevronDown,
-  CreditCard,
-  Globe,
   Menu,
-  Server,
-  ShieldCheck,
-  Smartphone,
-  Users,
   X,
 } from 'lucide-react'
 
-const architectureComponents = [
+const platformModules = [
   {
-    number: '01',
-    name: 'Web Portal',
-    subtitle: 'Administrative Dashboard',
-    targetUsers: 'Platform Owners & School Admins',
-    icon: Globe,
-    description:
-      'Multi-school onboarding, child-level subscription management, academic year and class configuration, teacher assignments, fee accounting, uniform store inventory, and school-wide notices.',
-    tags: ['Multi-school onboarding', 'Fee accounting', 'Uniform inventory', 'School notices'],
+    id: 'portal',
+    tabLabel: 'Web Admin Console',
+    code: 'MODULE // WEB-ADMIN',
+    title: 'Administrative Web Portal',
+    audience: 'For Platform Owners & School Administrators',
+    summary:
+      'Central command console for multi-school onboarding, academic year and class configuration, teacher assignments, USD and ZiG fee accounting, uniform store inventory, and institution-wide notices.',
+    highlights: [
+      { label: 'Multi-School Control', detail: 'Onboard primary and secondary institutions with child-level subscription management.' },
+      { label: 'Academic Structuring', detail: 'Configure terms, classes, teacher rosters, and student enrollments from one console.' },
+      { label: 'Finance & Uniform Store', detail: 'Manage dual-currency tuition ledgers and live uniform stock levels.' },
+    ],
+    consolePreview: {
+      windowTitle: 'EDU-CONNECT // ADMINISTRATIVE CONSOLE — HARARE, ZW',
+      status: 'CLOUD SYNC ACTIVE · 5-ROLE RBAC',
+      metrics: [
+        { label: 'ACTIVE TERM', value: 'Term 3 · 2026' },
+        { label: 'CURRENCY LEDGERS', value: 'USD & ZiG Live' },
+        { label: 'DATA ISOLATION', value: 'Tenant-Locked' },
+      ],
+      rows: [
+        { col1: 'Tuition & Levy Ledger', col2: 'EcoCash Auto-Reconciled', badge: 'VERIFIED' },
+        { col1: 'School Uniform Inventory', col2: 'In-App Store Catalog Synced', badge: 'ONLINE' },
+        { col1: 'Staff & Class Rosters', col2: 'Role Permissions Enforced', badge: 'ACTIVE' },
+        { col1: 'Institution Broadcasts', col2: 'Instant Parent Push & Portal', badge: 'READY' },
+      ],
+    },
   },
   {
-    number: '02',
-    name: 'Android Mobile App',
-    subtitle: 'Edu-Connect Mobile (to be named Pedacom)',
-    targetUsers: 'Teachers & Parents / Guardians',
-    icon: Smartphone,
-    description:
-      'Teachers handle digital roll call, merit and conduct logging, homework assignments, activity rosters, and multimedia learning journals. Parents access real-time child records, fee balances, notices, and uniform ordering.',
-    tags: ['Digital roll call', 'Learning journals', 'Real-time records', 'Uniform ordering'],
+    id: 'mobile-teacher',
+    tabLabel: 'Teacher Android App',
+    code: 'MODULE // TEACHER-MOBILE',
+    title: 'Classroom Workflow Application',
+    audience: 'For Educators & Class Teachers',
+    summary:
+      'Purpose-built Android workspace eliminating paper registers. Teachers record daily roll call, publish homework deadlines, log standardized merits and conduct notes, and share multimedia learning journals.',
+    highlights: [
+      { label: 'Digital Roll Call', detail: 'One-tap daily attendance that updates school records and parent dashboards immediately.' },
+      { label: 'Learning Journals', detail: 'Publish student work samples—photos, drawings, voice notes, and wellbeing updates.' },
+      { label: 'Homework & Conduct', detail: 'Assign coursework and log merits using school-standardized categories.' },
+    ],
+    consolePreview: {
+      windowTitle: 'EDU-CONNECT ANDROID // EDUCATOR WORKSPACE',
+      status: 'REAL-TIME CLASSROOM SYNC',
+      metrics: [
+        { label: 'ATTENDANCE', value: 'Instant Roll Call' },
+        { label: 'JOURNALS', value: 'Photo · Voice · Notes' },
+        { label: 'ASSESSMENTS', value: 'Merits & Homework' },
+      ],
+      rows: [
+        { col1: 'Morning Attendance Register', col2: 'Synced to Admin & Parent Profiles', badge: 'COMPLETED' },
+        { col1: 'Multimedia Learning Journal', col2: 'Student Portfolio & Voice Notes', badge: 'PUBLISHED' },
+        { col1: 'Homework & Syllabus Tasks', col2: 'Due Dates Sent to Guardians', badge: 'ASSIGNED' },
+        { col1: 'Merit & Conduct Logging', col2: 'Standardized School Categories', badge: 'LOGGED' },
+      ],
+    },
   },
   {
-    number: '03',
-    name: 'Central API Server',
-    subtitle: 'Laravel Cloud Backbone',
-    targetUsers: 'System Infrastructure',
-    icon: Server,
-    description:
-      'Enforces strict server-side role-based access control (RBAC) across five distinct user roles, handles encrypted HTTPS traffic, and dispatches automated invitation and password emails.',
-    tags: ['5-Role RBAC', 'Encrypted HTTPS', 'School data isolation', 'Automated emails'],
+    id: 'mobile-parent',
+    tabLabel: 'Parent & Guardian App',
+    code: 'MODULE // GUARDIAN-MOBILE',
+    title: 'Parent & Family Experience',
+    audience: 'For Parents & Verified Guardians',
+    summary:
+      'Complete visibility across every enrolled child from a single smartphone. Switch between children to review attendance, academic reports, homework, and fee balances, or order school uniforms and pay via EcoCash.',
+    highlights: [
+      { label: 'Multi-Child Switcher', detail: 'Monitor attendance percentages, academic reports, and conduct across siblings.' },
+      { label: 'In-App Uniform Shop', detail: 'Browse sizes, place uniform orders, and pay directly inside the Android application.' },
+      { label: 'Verified Guardian Linking', detail: 'Administrative verification protects student records from unauthorized access.' },
+    ],
+    consolePreview: {
+      windowTitle: 'EDU-CONNECT ANDROID // PARENT & GUARDIAN PORTAL',
+      status: 'GUARDIAN LINK VERIFIED',
+      metrics: [
+        { label: 'STUDENT PROFILES', value: 'Multi-Child View' },
+        { label: 'FEE SETTLEMENT', value: 'USD / ZiG EcoCash' },
+        { label: 'UNIFORM STORE', value: 'Direct In-App Order' },
+      ],
+      rows: [
+        { col1: 'Live Attendance & Conduct', col2: 'Real-Time Classroom Feed', badge: 'UPDATED' },
+        { col1: 'Term Academic Reports', col2: 'Official School Assessments', badge: 'AVAILABLE' },
+        { col1: 'Tuition Balance & Statement', col2: 'Pay Now in USD or ZiG via EcoCash', badge: 'INSTANT' },
+        { col1: 'School Uniform Order', col2: 'Confirmed by Background Worker', badge: 'PAID' },
+      ],
+    },
   },
   {
-    number: '04',
-    name: 'Payment Gateway',
-    subtitle: 'EcoCash Integration',
-    targetUsers: 'Parents & School Finance',
-    icon: CreditCard,
-    description:
-      'Processes secure online payments in both USD and ZiG through EcoCash, supported by a dedicated background payment worker that verifies and reconciles order statuses automatically.',
-    tags: ['USD & ZiG', 'EcoCash', 'Auto-reconciliation', 'Payment worker'],
+    id: 'cloud-ecocash',
+    tabLabel: 'Cloud API & EcoCash',
+    code: 'MODULE // CORE-INFRASTRUCTURE',
+    title: 'Laravel Cloud API & EcoCash Payment Engine',
+    audience: 'System Infrastructure & School Finance',
+    summary:
+      'Enterprise Laravel cloud backbone enforcing 5-role access control and strict school data isolation, paired with an automated EcoCash payment worker that processes and reconciles USD and ZiG transactions.',
+    highlights: [
+      { label: 'Dual-Currency EcoCash', detail: 'Native USD and ZiG mobile money checkout for school fees and uniform purchases.' },
+      { label: 'Automated Reconciliation', detail: 'Dedicated background payment worker verifies and updates payment statuses automatically.' },
+      { label: '5-Role Cloud RBAC', detail: 'Encrypted HTTPS API guarantees staff and parents only access authorized records.' },
+    ],
+    consolePreview: {
+      windowTitle: 'PEDASENTICOM CLOUD // API & ECOCASH WORKER',
+      status: 'HTTPS TLS · 5-ROLE RBAC ENFORCED',
+      metrics: [
+        { label: 'GATEWAY', value: 'EcoCash Zimbabwe' },
+        { label: 'CURRENCIES', value: 'USD & ZiG Native' },
+        { label: 'RECONCILIATION', value: 'Automated Worker' },
+      ],
+      rows: [
+        { col1: 'Role-Based Access Control', col2: '5 Distinct Institutional Roles', badge: 'ENFORCED' },
+        { col1: 'Multi-Tenant Isolation', col2: 'Strict Per-School Database Scope', badge: 'LOCKED' },
+        { col1: 'EcoCash Payment Dispatch', col2: 'USD & ZiG Mobile Prompt', badge: 'ACTIVE' },
+        { col1: 'Background Settlement Worker', col2: 'Auto-Updates School Ledger', badge: 'VERIFIED' },
+      ],
+    },
   },
 ]
 
-const stakeholders = [
+const roleMatrix = [
   {
-    id: 'schools',
-    label: 'Schools & Admins',
-    title: 'For Schools & Administrators',
-    icon: Building2,
-    accent: 'navy',
-    items: [
-      {
-        heading: 'Centralized School Management',
-        text: 'Configure academic years, classes, staff rosters, and student enrollments from a single administrative portal.',
-      },
-      {
-        heading: 'Multi-Currency Fee & Store Operations',
-        text: 'Track tuition balances in USD and ZiG and operate a digital uniform shop with automated EcoCash payment confirmation.',
-      },
-      {
-        heading: 'Strict Data Governance',
-        text: 'Server-enforced permissions guarantee that school staff and administrators only access records belonging to their assigned institution.',
-      },
+    role: 'Schools & Administrators',
+    tag: 'INSTITUTIONAL CONTROL',
+    headline: 'Centralized Multi-School Administration',
+    points: [
+      'Configure academic years, terms, classes, staff rosters, and student enrollments from a single web portal.',
+      'Track tuition balances in both USD and ZiG and operate a digital uniform store with automated EcoCash confirmation.',
+      'Enforce strict data governance so administrators and staff only access records belonging to their school.',
     ],
   },
   {
-    id: 'teachers',
-    label: 'Teachers',
-    title: 'For Teachers',
-    icon: BookOpen,
-    accent: 'cyan',
-    items: [
-      {
-        heading: 'Paperless Classroom Workflows',
-        text: 'Record class attendance, assign homework, manage activity rosters, and log merits or conduct notes using school-standardized categories.',
-      },
-      {
-        heading: 'Interactive Learning Journals',
-        text: 'Share student work samples—including photos, drawings, voice notes, reports, and wellbeing logs—directly with linked parents.',
-      },
+    role: 'Educators & Teachers',
+    tag: 'CLASSROOM EXECUTION',
+    headline: 'Paperless Teaching & Student Journals',
+    points: [
+      'Complete daily class attendance, assign homework, manage activity rosters, and log merits or conduct notes on Android.',
+      'Publish multimedia learning journals—including photos, drawings, voice notes, reports, and wellbeing logs—directly to parents.',
+      'Eliminate manual paper registers and end-of-term reporting bottlenecks with real-time cloud synchronization.',
     ],
   },
   {
-    id: 'parents',
-    label: 'Parents & Guardians',
-    title: 'For Parents & Guardians',
-    icon: Users,
-    accent: 'gold',
-    items: [
-      {
-        heading: 'Comprehensive Child Visibility',
-        text: 'Switch seamlessly between multiple enrolled children to view attendance percentages, academic reports, homework deadlines, and behavior records.',
-      },
-      {
-        heading: 'Convenient Digital Commerce & Security',
-        text: 'Browse, order, and pay for school uniforms inside the app. Guardian-student linking requires administrative verification to safeguard student privacy.',
-      },
+    role: 'Parents & Guardians',
+    tag: 'HOME-TO-SCHOOL LINK',
+    headline: 'Real-Time Visibility & Mobile Payments',
+    points: [
+      'Switch effortlessly between multiple enrolled children to view attendance percentages, homework deadlines, and reports.',
+      'Pay tuition fees and purchase school uniforms in USD or ZiG using EcoCash directly inside the mobile app.',
+      'Administrative verification of every guardian-student link safeguards student privacy and institutional security.',
     ],
   },
 ]
@@ -133,37 +175,34 @@ const partners = [
   },
 ]
 
-const corporateSummary = [
+const corporateSpecs = [
   { label: 'Company Name', value: 'Pedasenticom' },
+  { label: 'Official Domain', value: 'pedasenticom.co.zw', href: 'https://pedasenticom.co.zw' },
   {
-    label: 'Official Website',
-    value: 'pedasenticom.co.zw',
-    href: 'https://pedasenticom.co.zw',
-  },
-  {
-    label: 'Company Registration',
+    label: 'Legal Registration',
     value: 'Registered in Zimbabwe under CIPZ (Companies and Intellectual Property Zimbabwe)',
   },
   { label: 'Headquarters', value: 'Harare, Zimbabwe' },
-  { label: 'Core Focus & Sector', value: 'Education & Technology (EdTech) & School Payments' },
-  { label: 'Flagship Product', value: 'Edu-Connect (to be named Pedacom)' },
-  { label: 'Primary Platforms', value: 'Administrative Web Portal & Android Mobile Application' },
+  { label: 'Industry Sector', value: 'Education & Technology (EdTech) · School Management & Payments' },
+  { label: 'Flagship Platform', value: 'Edu-Connect (transitioning to Pedacom)' },
+  { label: 'Client Platforms', value: 'Administrative Web Portal & Android Mobile Application' },
+  { label: 'Payment Gateway', value: 'EcoCash Multi-Currency Integration (USD & ZiG)' },
   {
-    label: 'Company Email',
+    label: 'Engineering Partner',
+    value: 'Split Technologies (splittechnologies.co.zw)',
+    href: 'https://splittechnologies.co.zw',
+  },
+  {
+    label: 'Official Email',
     value: 'Pedasenticom@gmail.com',
     href: 'mailto:Pedasenticom@gmail.com',
     external: false,
   },
   {
-    label: 'Company Contact',
-    value: '0790543013',
+    label: 'Official Telephone & WhatsApp',
+    value: '+263 790 543 013 (0790543013)',
     href: 'tel:+263790543013',
     external: false,
-  },
-  {
-    label: 'Development Team',
-    value: 'Split Technologies (splittechnologies.co.zw)',
-    href: 'https://splittechnologies.co.zw',
   },
 ]
 
@@ -363,342 +402,319 @@ function IntroLoader() {
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [contactOpen, setContactOpen] = useState(false)
-  const [activeStakeholder, setActiveStakeholder] = useState('all')
+  const [activeModuleId, setActiveModuleId] = useState('portal')
+  const [openFaqIndex, setOpenFaqIndex] = useState(0)
 
   const closeMenu = () => setMenuOpen(false)
-
-  const visibleStakeholders =
-    activeStakeholder === 'all'
-      ? stakeholders
-      : stakeholders.filter((group) => group.id === activeStakeholder)
+  const activeModule =
+    platformModules.find((m) => m.id === activeModuleId) || platformModules[0]
 
   return (
     <div className="site-shell" id="top">
       <IntroLoader />
-      <header className="nav-wrap">
-        <nav className="nav container" aria-label="Primary navigation">
-          <a className="brand" href="#top" onClick={closeMenu}>
-            <span className="brand-emblem">
+
+      {/* TOP GLOBAL NAVIGATION BAR */}
+      <header className="global-header">
+        <div className="container global-nav">
+          <a className="brand-lockup" href="#top" onClick={closeMenu}>
+            <span className="brand-crest">
               <img
-                className="brand-logo"
                 src="/pedasenticom-mark.png"
                 alt="Pedasenticom emblem"
-                width="46"
-                height="46"
+                width="42"
+                height="42"
                 decoding="async"
               />
             </span>
-            <span className="brand-text">
-              <span className="brand-name">
-                Pedasenticom<span className="brand-dot">.</span>
-              </span>
-              <span className="brand-sub">Education &amp; Technology · Zimbabwe</span>
+            <span className="brand-copy">
+              <span className="brand-title">PEDASENTICOM</span>
+              <span className="brand-meta">Education &amp; Technology · Zimbabwe</span>
             </span>
           </a>
 
           <button
-            className="menu-toggle"
+            className="mobile-menu-btn"
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
+            aria-label="Toggle navigation"
             aria-expanded={menuOpen}
           >
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
 
-          <div className={`nav-links ${menuOpen ? 'is-open' : ''}`}>
-            <a href="#overview" onClick={closeMenu}>Overview</a>
-            <a href="#platform" onClick={closeMenu}>Architecture</a>
-            <a href="#stakeholders" onClick={closeMenu}>Stakeholders</a>
-            <a href="#partners" onClick={closeMenu}>Partners</a>
-            <a href="#summary" onClick={closeMenu}>Profile</a>
+          <nav className={`primary-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
+            <a href="#spotlight" onClick={closeMenu}>Edu-Connect Platform</a>
+            <a href="#roles" onClick={closeMenu}>School Roles</a>
+            <a href="#infrastructure" onClick={closeMenu}>Cloud &amp; Partners</a>
+            <a href="#specifications" onClick={closeMenu}>Specifications</a>
             <a href="#faq" onClick={closeMenu}>FAQ</a>
-            <a className="nav-cta" href="#contact" onClick={closeMenu}>
-              Onboard a school <ArrowUpRight size={16} />
+            <a className="header-cta" href="#contact" onClick={closeMenu}>
+              Onboard a School <ArrowUpRight size={15} />
             </a>
-          </div>
-        </nav>
+          </nav>
+        </div>
       </header>
 
       <main>
-        {/* HERO */}
-        <section className="hero container">
-          <div className="hero-copy">
-            <p className="eyebrow">
-              <span className="eyebrow-line" /> Education &amp; Technology · Registered in Zimbabwe under CIPZ
-            </p>
-            <h1>
-              Connecting home<br />
-              &amp; school <em>digitally.</em>
-            </h1>
-            <p className="hero-description">
-              <strong>Pedasenticom</strong> is an education and technology company headquartered in{' '}
-              <strong>Harare, Zimbabwe</strong> and registered under <strong>CIPZ</strong>. Through our
-              flagship product—<strong>Edu-Connect</strong> (to be named <strong>Pedacom</strong>)—we deliver
-              integrated digital infrastructure that streamlines school administration, classroom engagement,
-              and multi-currency USD &amp; ZiG EcoCash payments.
-            </p>
-            <div className="hero-actions">
-              <a className="button button-dark" href="#contact">
-                Partner with us <ArrowUpRight size={18} />
-              </a>
-              <a className="text-link" href="#platform">
-                Explore architecture <ChevronDown size={16} />
-              </a>
-            </div>
+        {/* DARK CINEMATIC PRODUCT STAGE (GEFORCE NOW INSPIRED) */}
+        <section className="hero-stage">
+          <div className="hero-backdrop-grid" aria-hidden="true" />
+          <div className="container hero-layout">
+            <div className="hero-lead">
+              <div className="product-series-bar">
+                <span className="series-tag">FLAGSHIP PLATFORM</span>
+                <span className="series-divider" />
+                <span className="series-name">EDU-CONNECT (PEDACOM)</span>
+              </div>
 
-            <div className="hero-metrics" aria-label="Platform highlights">
-              <div className="metric-item">
-                <span className="metric-value">USD &amp; ZiG</span>
-                <span className="metric-label">EcoCash Gateway</span>
-              </div>
-              <div className="metric-item">
-                <span className="metric-value">5-Role RBAC</span>
-                <span className="metric-label">Multi-Tenant Cloud</span>
-              </div>
-              <div className="metric-item">
-                <span className="metric-value">Web &amp; Android</span>
-                <span className="metric-label">Unified Ecosystem</span>
-              </div>
-            </div>
-          </div>
+              <h1>
+                Integrated Digital Infrastructure for Schools in Zimbabwe.
+              </h1>
 
-          <div className="hero-visual" aria-label="Pedasenticom official brand showcase">
-            <div className="visual-grid" />
-            <div className="visual-glow" />
-            <div className="visual-note note-top">
-              <span className="pulse" /> Flagship Product: Edu-Connect (Pedacom)
-            </div>
-            <div className="logo-stage">
-              <img
-                src="/pedasenticom-logo.jpg"
-                alt="Pedasenticom — Inspired to Advance Your Global Reach"
-                width="1024"
-                height="559"
-                decoding="async"
-              />
-            </div>
-            <div className="visual-footer">
-              <span>Web Portal &amp; Android App</span>
-              <span>Harare, Zimbabwe &amp; Southern Africa</span>
-            </div>
-          </div>
-        </section>
-
-        {/* 01 / EXECUTIVE SUMMARY & MISSION */}
-        <section className="intro-band" id="overview">
-          <div className="container intro-grid">
-            <div className="intro-sidebar">
-              <p className="section-kicker">01 / Executive Summary</p>
-              <div className="pedacom-badge">
-                <span className="pedacom-badge-eyebrow">Flagship Product</span>
-                <strong className="pedacom-badge-title">EDU-CONNECT</strong>
-                <span className="pedacom-badge-sub">To be named Pedacom</span>
-                <span className="pedacom-badge-note">Connecting Home &amp; School</span>
-              </div>
-            </div>
-            <div className="intro-body">
-              <h2>
-                A unified school-to-home <span>digital ecosystem.</span>
-              </h2>
-              <p>
-                <strong>Pedasenticom</strong> is an education and technology (EdTech) company based in{' '}
-                <strong>Harare, Zimbabwe</strong> and officially registered under <strong>CIPZ</strong>{' '}
-                (Companies and Intellectual Property Zimbabwe), dedicated to bridging the operational and
-                communication gap between schools, educators, and families. Through our flagship
-                product—<strong>Edu-Connect</strong> (to be named <strong>Pedacom</strong>)—we deliver a
-                unified school-to-home digital ecosystem engineered to streamline school administration,
-                classroom engagement, and parent-teacher collaboration.
-              </p>
-              <p>
-                Engineered in partnership with <strong>Split Technologies</strong>, Pedasenticom combines an
-                administrative web portal with a dedicated Android mobile application. Schools manage
-                attendance, academic records, multi-currency fee balances, and online uniform stores from a
-                central dashboard, while parents monitor their children&apos;s daily progress and complete
-                USD and ZiG EcoCash payments from their mobile devices.
+              <p className="hero-subcopy">
+                <strong>Pedasenticom</strong> is an education and technology company headquartered in{' '}
+                <strong>Harare, Zimbabwe</strong> and registered under <strong>CIPZ</strong>. Through{' '}
+                <strong>Edu-Connect</strong> (transitioning to <strong>Pedacom</strong>), we unite school
+                administration, Android classroom workflows, parent engagement, and dual-currency{' '}
+                <strong>USD &amp; ZiG EcoCash</strong> payments on one cloud platform.
               </p>
 
-              <blockquote className="mission-callout">
-                <span className="mission-label">Our Mission &amp; Vision</span>
-                <p>
-                  Pedasenticom&apos;s mission is to strengthen the partnership between schools, teachers, and
-                  parents through accessible, secure, and real-time digital tools that support every child&apos;s
-                  educational journey—setting the standard for connected, transparent school communities across
-                  Zimbabwe and Southern Africa.
-                </p>
-              </blockquote>
+              <div className="hero-cta-row">
+                <a className="btn-primary-gold" href="#contact">
+                  Deploy at Your School <ArrowUpRight size={17} />
+                </a>
+                <a className="btn-outline-cyan" href="#spotlight">
+                  Inspect Platform Modules <ChevronDown size={16} />
+                </a>
+              </div>
+
+              <div className="hero-spec-strip" aria-label="Core platform capabilities">
+                <div className="spec-cell">
+                  <span className="spec-number">USD &amp; ZiG</span>
+                  <span className="spec-caption">EcoCash Fee &amp; Store Gateway</span>
+                </div>
+                <div className="spec-cell">
+                  <span className="spec-number">Web + Android</span>
+                  <span className="spec-caption">Admin Portal &amp; Mobile App</span>
+                </div>
+                <div className="spec-cell">
+                  <span className="spec-number">5-Role RBAC</span>
+                  <span className="spec-caption">Multi-Tenant Cloud Security</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="hero-display-Rig">
+              <div className="display-frame">
+                <div className="display-topbar">
+                  <span className="display-title">PEDASENTICOM // OFFICIAL PLATFORM SHOWCASE</span>
+                  <span className="display-region">HARARE · ZIMBABWE</span>
+                </div>
+                <div className="display-screen">
+                  <img
+                    src="/pedasenticom-logo.jpg"
+                    alt="Pedasenticom — Inspired to Advance Your Global Reach"
+                    width="1024"
+                    height="559"
+                    decoding="async"
+                  />
+                </div>
+                <div className="display-telemetry">
+                  <div>
+                    <span className="telemetry-key">REGISTRATION</span>
+                    <strong className="telemetry-val">CIPZ Zimbabwe</strong>
+                  </div>
+                  <div>
+                    <span className="telemetry-key">FLAGSHIP</span>
+                    <strong className="telemetry-val">Edu-Connect (Pedacom)</strong>
+                  </div>
+                  <div>
+                    <span className="telemetry-key">PAYMENTS</span>
+                    <strong className="telemetry-val">EcoCash USD / ZiG</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* SUB-NAVIGATION ANCHOR BAR */}
+          <div className="subnav-bar">
+            <div className="container subnav-inner">
+              <span className="subnav-brand">EDU-CONNECT ARCHITECTURE</span>
+              <div className="subnav-links">
+                <a href="#spotlight">Interactive Modules</a>
+                <a href="#roles">Role Matrix</a>
+                <a href="#infrastructure">EcoCash &amp; Cloud</a>
+                <a href="#specifications">Corporate Specs</a>
+                <a href="#faq">Verified FAQ</a>
+                <a href="#contact">Direct Contact</a>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* 02 / CORE PLATFORM ARCHITECTURE */}
-        <section className="platform container" id="platform">
-          <div className="section-heading">
-            <div>
-              <p className="section-kicker">02 / Core Platform Architecture</p>
-              <h2>
-                Centralized cloud.<br />
-                <span>Multi-tenant scalability.</span>
-              </h2>
-            </div>
-            <p className="heading-aside">
-              Every request passes through a secure API layer that validates user permissions and enforces
-              strict school-level data isolation.
-            </p>
-          </div>
-
-          <div className="component-list">
-            {architectureComponents.map((item) => {
-              const Icon = item.icon
-              return (
-                <article className="component-card" key={item.number}>
-                  <div className="component-index">
-                    <span className="component-number">{item.number}</span>
-                    <span className="component-icon" aria-hidden="true">
-                      <Icon size={18} />
-                    </span>
-                  </div>
-
-                  <div className="component-title">
-                    <h3>{item.name}</h3>
-                    {item.href ? (
-                      <a
-                        className="component-sub link"
-                        href={item.href}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {item.subtitle} <ArrowUpRight size={13} />
-                      </a>
-                    ) : (
-                      <span className="component-sub">{item.subtitle}</span>
-                    )}
-                    <span className="component-users">{item.targetUsers}</span>
-                  </div>
-
-                  <p className="component-desc">{item.description}</p>
-
-                  <div className="component-tags">
-                    {item.tags.map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
-                  </div>
-                </article>
-              )
-            })}
-          </div>
-        </section>
-
-        {/* 03 / STAKEHOLDER VALUE PROPOSITION */}
-        <section className="stakeholders-band" id="stakeholders">
+        {/* INTERACTIVE PLATFORM SPOTLIGHT (TABBED MODULE SWITCHER + LIVE CONSOLE VIEW) */}
+        <section className="spotlight-section" id="spotlight">
           <div className="container">
-            <div className="section-heading">
+            <div className="section-banner">
               <div>
-                <p className="section-kicker">03 / Stakeholder Value Proposition</p>
-                <h2>
-                  Built for every role<br />
-                  <span>in the school community.</span>
-                </h2>
+                <p className="kicker-line">PLATFORM ARCHITECTURE // EDU-CONNECT (PEDACOM)</p>
+                <h2>One Cloud Ecosystem. Four Integrated Modules.</h2>
               </div>
-              <div className="role-filters" role="tablist" aria-label="Filter stakeholders">
+              <p className="banner-summary">
+                Select any module below to inspect how Pedasenticom connects school leadership, classroom
+                educators, parents, and automated EcoCash finance.
+              </p>
+            </div>
+
+            <div className="module-switcher-bar" role="tablist" aria-label="Platform modules">
+              {platformModules.map((mod) => (
                 <button
+                  key={mod.id}
                   type="button"
                   role="tab"
-                  aria-selected={activeStakeholder === 'all'}
-                  className={`role-filter ${activeStakeholder === 'all' ? 'is-active' : ''}`}
-                  onClick={() => setActiveStakeholder('all')}
+                  aria-selected={activeModule.id === mod.id}
+                  className={`module-tab ${activeModule.id === mod.id ? 'is-selected' : ''}`}
+                  onClick={() => setActiveModuleId(mod.id)}
                 >
-                  All roles
+                  <span className="module-tab-code">{mod.code}</span>
+                  <span className="module-tab-name">{mod.tabLabel}</span>
                 </button>
-                {stakeholders.map((group) => (
-                  <button
-                    key={group.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={activeStakeholder === group.id}
-                    className={`role-filter ${activeStakeholder === group.id ? 'is-active' : ''}`}
-                    onClick={() => setActiveStakeholder(group.id)}
-                  >
-                    {group.label}
-                  </button>
-                ))}
-              </div>
+              ))}
             </div>
 
-            <div className={`stakeholder-grid ${activeStakeholder !== 'all' ? 'is-focused' : ''}`}>
-              {visibleStakeholders.map((group) => {
-                const Icon = group.icon
-                return (
-                  <article className={`stakeholder-card accent-${group.accent}`} key={group.id}>
-                    <div className="stakeholder-header">
-                      <span className="stakeholder-icon" aria-hidden="true">
-                        <Icon size={20} />
-                      </span>
-                      <h3>{group.title}</h3>
+            <div className="spotlight-stage">
+              <div className="spotlight-copy">
+                <span className="module-audience">{activeModule.audience}</span>
+                <h3>{activeModule.title}</h3>
+                <p className="module-description">{activeModule.summary}</p>
+
+                <div className="module-highlights">
+                  {activeModule.highlights.map((item) => (
+                    <div className="highlight-row" key={item.label}>
+                      <h4>{item.label}</h4>
+                      <p>{item.detail}</p>
                     </div>
-                    <ul className="stakeholder-list">
-                      {group.items.map((point) => (
-                        <li key={point.heading}>
-                          <Check size={16} className="list-check" aria-hidden="true" />
-                          <div>
-                            <strong>{point.heading}:</strong> {point.text}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
-                )
-              })}
+                  ))}
+                </div>
+              </div>
+
+              <div className="spotlight-console" aria-label={`${activeModule.title} system preview`}>
+                <div className="console-header">
+                  <span className="console-title">{activeModule.consolePreview.windowTitle}</span>
+                  <span className="console-status">{activeModule.consolePreview.status}</span>
+                </div>
+
+                <div className="console-metrics">
+                  {activeModule.consolePreview.metrics.map((m) => (
+                    <div className="console-metric-box" key={m.label}>
+                      <span>{m.label}</span>
+                      <strong>{m.value}</strong>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="console-table">
+                  {activeModule.consolePreview.rows.map((row) => (
+                    <div className="console-row" key={row.col1}>
+                      <div className="console-row-main">
+                        <strong>{row.col1}</strong>
+                        <span>{row.col2}</span>
+                      </div>
+                      <span className="console-badge">{row.badge}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* 04 / SCALABILITY & TECHNOLOGY PARTNERS */}
-        <section className="partners-band" id="partners">
+        {/* STAKEHOLDER ROLE MATRIX */}
+        <section className="roles-section" id="roles">
           <div className="container">
-            <div className="partners-top">
+            <div className="section-banner">
               <div>
-                <p className="section-kicker light">04 / Scalability &amp; Partners</p>
-                <h2>
-                  Built to scale.<br />
-                  <span>Backed by trusted partners.</span>
-                </h2>
+                <p className="kicker-line">STAKEHOLDER CAPABILITIES // SCHOOL-TO-HOME</p>
+                <h2>Engineered for Every Role in the School Community.</h2>
               </div>
-
-              <div className="deployment-card">
-                <div className="deployment-badge">
-                  <span className="pulse" /> Multi-Tenant Cloud
-                </div>
-                <h3>Primary &amp; Secondary Schools</h3>
-                <p>
-                  Pedasenticom&apos;s multi-tenant cloud architecture is engineered to onboard primary and
-                  secondary schools across Zimbabwe and Southern Africa without requiring separate
-                  infrastructure—delivering unified classroom management, real-time parent engagement, and
-                  secure EcoCash payment workflows.
-                </p>
-                <div className="deployment-pillars">
-                  <span><ShieldCheck size={15} /> Classroom management</span>
-                  <span><ShieldCheck size={15} /> Parent engagement</span>
-                  <span><ShieldCheck size={15} /> Multi-school ready</span>
-                </div>
-              </div>
+              <p className="banner-summary">
+                Pedasenticom replaces fragmented paper registers, manual fee receipts, and disconnected chat
+                groups with role-specific digital tools.
+              </p>
             </div>
 
-            <div className="partner-grid">
+            <div className="roles-grid">
+              {roleMatrix.map((group) => (
+                <article className="role-panel" key={group.role}>
+                  <div className="role-panel-top">
+                    <span className="role-tag">{group.tag}</span>
+                    <h3>{group.role}</h3>
+                    <p className="role-subheadline">{group.headline}</p>
+                  </div>
+                  <ul className="role-spec-list">
+                    {group.points.map((pt) => (
+                      <li key={pt}>{pt}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* DARK INFRASTRUCTURE & PARTNERS BAND */}
+        <section className="infra-section" id="infrastructure">
+          <div className="container">
+            <div className="section-banner light">
+              <div>
+                <p className="kicker-line gold">CLOUD SCALE &amp; ECOSYSTEM PARTNERS</p>
+                <h2>Built for Primary &amp; Secondary Schools Across Zimbabwe.</h2>
+              </div>
+              <p className="banner-summary light">
+                Multi-tenant cloud architecture allows institutions in Harare and across Southern Africa to
+                launch without dedicated on-premise servers.
+              </p>
+            </div>
+
+            <div className="infra-bento">
+              <article className="infra-card primary-span">
+                <span className="infra-eyebrow">MULTI-TENANT CLOUD BACKBONE</span>
+                <h3>Zero-Friction School Onboarding &amp; Strict Data Isolation</h3>
+                <p>
+                  Every institution onboarded onto Edu-Connect (Pedacom) operates within an isolated tenant
+                  boundary enforced by 5-role server-side access control. School administrators control academic
+                  years, fee structures, uniform inventory, and verified guardian links from day one.
+                </p>
+                <div className="infra-stat-bar">
+                  <div>
+                    <strong>Primary &amp; Secondary</strong>
+                    <span>Institution Ready</span>
+                  </div>
+                  <div>
+                    <strong>USD &amp; ZiG</strong>
+                    <span>Dual-Currency Ledgers</span>
+                  </div>
+                  <div>
+                    <strong>Harare, Zimbabwe</strong>
+                    <span>CIPZ Registered</span>
+                  </div>
+                </div>
+              </article>
+
               {partners.map((partner) => (
-                <article className="partner-card" key={partner.name}>
-                  <span className="partner-role">{partner.role}</span>
+                <article className="infra-card" key={partner.name}>
+                  <span className="infra-eyebrow">{partner.role}</span>
                   <h3>{partner.name}</h3>
                   <p>{partner.description}</p>
                   {partner.href && (
                     <a
-                      className="partner-link"
+                      className="infra-link"
                       href={partner.href}
                       target="_blank"
                       rel="noreferrer"
                     >
-                      {partner.linkLabel} <ArrowUpRight size={14} />
+                      {partner.linkLabel} <ArrowUpRight size={15} />
                     </a>
                   )}
                 </article>
@@ -707,151 +723,199 @@ function App() {
           </div>
         </section>
 
-        {/* 05 / CORPORATE SUMMARY */}
-        <section className="summary container" id="summary">
-          <div className="summary-grid">
-            <div className="summary-lead">
-              <p className="section-kicker">05 / Corporate Summary</p>
-              <h2>
-                Organization &amp;<br />
-                <span>platform overview.</span>
-              </h2>
-              <div className="brand-card">
-                <img
-                  src="/pedasenticom-mark.png"
-                  alt="Pedasenticom crest"
-                  width="52"
-                  height="52"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div>
-                  <span className="brand-card-title">PEDASENTICOM</span>
-                  <span className="brand-card-slogan">Inspired to Advance Your Global Reach</span>
+        {/* ENTERPRISE SPECIFICATION SHEET & CORPORATE PROFILE */}
+        <section className="specs-section" id="specifications">
+          <div className="container">
+            <div className="specs-layout">
+              <div className="specs-intro">
+                <p className="kicker-line">CORPORATE &amp; TECHNICAL SPECIFICATIONS</p>
+                <h2>Verified Organization &amp; Platform Profile.</h2>
+                <p>
+                  Pedasenticom&apos;s mission is to strengthen the partnership between schools, educators, and
+                  families through accessible, secure, and real-time digital infrastructure across Zimbabwe and
+                  Southern Africa.
+                </p>
+
+                <div className="spec-brand-plate">
+                  <img
+                    src="/pedasenticom-mark.png"
+                    alt="Pedasenticom official emblem"
+                    width="56"
+                    height="56"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div>
+                    <strong>PEDASENTICOM</strong>
+                    <span>Inspired to Advance Your Global Reach</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <dl className="summary-table" aria-label="Organization and platform overview">
-              {corporateSummary.map((row) => (
-                <div className="summary-row" key={row.label}>
-                  <dt>{row.label}</dt>
-                  <dd>
-                    {row.href ? (
-                      <a
-                        href={row.href}
-                        target={row.external === false ? undefined : '_blank'}
-                        rel={row.external === false ? undefined : 'noreferrer'}
-                        className="summary-link"
-                      >
-                        {row.value} <ArrowUpRight size={15} />
-                      </a>
-                    ) : (
-                      row.value
-                    )}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+              <div className="specs-table-wrap">
+                <table className="specs-table" aria-label="Pedasenticom corporate and technical specifications">
+                  <tbody>
+                    {corporateSpecs.map((row) => (
+                      <tr key={row.label}>
+                        <th scope="row">{row.label}</th>
+                        <td>
+                          {row.href ? (
+                            <a
+                              href={row.href}
+                              target={row.external === false ? undefined : '_blank'}
+                              rel={row.external === false ? undefined : 'noreferrer'}
+                              className="spec-table-link"
+                            >
+                              {row.value} <ArrowUpRight size={14} />
+                            </a>
+                          ) : (
+                            row.value
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* 06 / FREQUENTLY ASKED QUESTIONS (ENTITY & AI OVERVIEW GROUNDING) */}
-        <section className="faq-band" id="faq">
+        {/* INTERACTIVE ACCORDION FAQ (GEFORCE NOW STYLE + FULL DOM FOR GOOGLE SEO) */}
+        <section className="faq-section" id="faq">
           <div className="container">
-            <div className="section-heading">
+            <div className="section-banner">
               <div>
-                <p className="section-kicker">06 / Frequently Asked Questions</p>
-                <h2>
-                  Verified facts about<br />
-                  <span>Pedasenticom in Zimbabwe.</span>
-                </h2>
+                <p className="kicker-line">FREQUENTLY ASKED QUESTIONS // VERIFIED ENTITY FACTS</p>
+                <h2>Questions About Pedasenticom &amp; Edu-Connect.</h2>
               </div>
-              <p className="heading-aside">
-                Key corporate, platform, and onboarding information for schools, educators, and parents across
-                Harare and Zimbabwe.
+              <p className="banner-summary">
+                Direct answers regarding Pedasenticom&apos;s CIPZ registration, Harare headquarters, platform
+                modules, and EcoCash school fee integration.
               </p>
             </div>
 
-            <div className="faq-grid">
-              {faqs.map((item) => (
-                <article className="faq-card" key={item.question}>
-                  <h3>{item.question}</h3>
-                  <p>{item.answer}</p>
-                </article>
-              ))}
+            <div className="faq-accordion">
+              {faqs.map((item, idx) => {
+                const isOpen = openFaqIndex === idx
+                return (
+                  <article className={`faq-item ${isOpen ? 'is-open' : ''}`} key={item.question}>
+                    <button
+                      type="button"
+                      className="faq-trigger"
+                      aria-expanded={isOpen}
+                      onClick={() => setOpenFaqIndex(isOpen ? -1 : idx)}
+                    >
+                      <span>{item.question}</span>
+                      <ChevronDown className="faq-chevron" size={20} />
+                    </button>
+                    <div className="faq-content">
+                      <p>{item.answer}</p>
+                    </div>
+                  </article>
+                )
+              })}
             </div>
           </div>
         </section>
 
-        {/* 07 / CONTACT */}
-        <section className="contact container" id="contact">
-          <p className="section-kicker">07 / Onboard Your School</p>
-          <h2>
-            Bring Edu-Connect to<br />
-            <em>your community.</em>
-          </h2>
-          <p className="contact-lead">
-            Partner with Pedasenticom—Zimbabwe&apos;s CIPZ-registered education and technology company in
-            Harare—to deploy unified school administration, parent engagement, and USD/ZiG EcoCash fee
-            collection for your primary or secondary institution.
-          </p>
+        {/* DIRECT SCHOOL ONBOARDING & CONTACT STAGE */}
+        <section className="contact-stage" id="contact">
+          <div className="container contact-box">
+            <div className="contact-copy">
+              <p className="kicker-line gold">SCHOOL ONBOARDING &amp; PARTNERSHIPS</p>
+              <h2>Deploy Edu-Connect at Your Institution.</h2>
+              <p>
+                Partner with Pedasenticom—Zimbabwe&apos;s CIPZ-registered education and technology company in
+                Harare—to roll out unified school administration, Android teacher and parent workflows, and
+                automated USD &amp; ZiG EcoCash fee collection.
+              </p>
+            </div>
 
-          <div className="contact-links">
-            <a className="contact-email" href="mailto:Pedasenticom@gmail.com">
-              Pedasenticom@gmail.com <ArrowUpRight size={24} />
-            </a>
-          </div>
+            <div className="contact-actions-panel">
+              <div className="contact-channel">
+                <span className="channel-label">OFFICIAL EMAIL</span>
+                <a className="channel-value" href="mailto:Pedasenticom@gmail.com">
+                  Pedasenticom@gmail.com <ArrowUpRight size={18} />
+                </a>
+              </div>
 
-          <div className="contact-meta">
-            <span>Harare, Zimbabwe · Registered under CIPZ</span>
-            <div className="phone-actions">
-              <button
-                className="phone-trigger"
-                type="button"
-                onClick={() => setContactOpen(!contactOpen)}
-                aria-expanded={contactOpen}
-              >
-                0790543013
-              </button>
-              {contactOpen && (
-                <div className="phone-options">
-                  <a href="tel:+263790543013">Call now</a>
-                  <a href="https://wa.me/263790543013" target="_blank" rel="noreferrer">
-                    WhatsApp
+              <div className="contact-channel">
+                <span className="channel-label">DIRECT PHONE &amp; WHATSAPP (HARARE, ZIMBABWE)</span>
+                <div className="channel-buttons">
+                  <a className="btn-primary-gold" href="tel:+263790543013">
+                    Call 0790543013
+                  </a>
+                  <a
+                    className="btn-outline-cyan"
+                    href="https://wa.me/263790543013"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    WhatsApp Chat <ArrowUpRight size={16} />
                   </a>
                 </div>
-              )}
+              </div>
             </div>
-            <span>© 2026 Pedasenticom</span>
           </div>
         </section>
       </main>
 
-      <footer className="footer">
-        <div className="container footer-inner">
-          <a className="brand footer-brand" href="#top">
-            <span className="brand-emblem small">
-              <img
-                className="brand-logo"
-                src="/pedasenticom-mark.png"
-                alt="Pedasenticom emblem"
-                width="34"
-                height="34"
-                loading="lazy"
-                decoding="async"
-              />
-            </span>
-            <span className="brand-name small">
-              Pedasenticom<span className="brand-dot">.</span>
-            </span>
-          </a>
-          <span className="footer-tagline">
-            Education &amp; Technology · Harare, Zimbabwe · Registered under CIPZ
-          </span>
-          <a className="footer-portal" href="mailto:Pedasenticom@gmail.com">
-            Pedasenticom@gmail.com <ArrowUpRight size={14} />
-          </a>
+      {/* ENTERPRISE FOOTER */}
+      <footer className="site-footer">
+        <div className="container footer-grid">
+          <div className="footer-col-brand">
+            <a className="brand-lockup" href="#top">
+              <span className="brand-crest small">
+                <img
+                  src="/pedasenticom-mark.png"
+                  alt="Pedasenticom emblem"
+                  width="34"
+                  height="34"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+              <span className="brand-title">PEDASENTICOM</span>
+            </a>
+            <p>
+              Education &amp; Technology company registered in Zimbabwe under CIPZ. Headquartered in Harare,
+              Zimbabwe.
+            </p>
+          </div>
+
+          <div className="footer-col">
+            <h4>Platform</h4>
+            <a href="#spotlight">Administrative Web Portal</a>
+            <a href="#spotlight">Android Mobile Application</a>
+            <a href="#spotlight">EcoCash USD &amp; ZiG Gateway</a>
+            <a href="#roles">Stakeholder Roles</a>
+          </div>
+
+          <div className="footer-col">
+            <h4>Company</h4>
+            <a href="#specifications">Corporate Specifications</a>
+            <a href="#infrastructure">Technology Partners</a>
+            <a href="#faq">Frequently Asked Questions</a>
+            <a href="https://splittechnologies.co.zw" target="_blank" rel="noreferrer">
+              Split Technologies
+            </a>
+          </div>
+
+          <div className="footer-col">
+            <h4>Contact</h4>
+            <a href="mailto:Pedasenticom@gmail.com">Pedasenticom@gmail.com</a>
+            <a href="tel:+263790543013">+263 790 543 013</a>
+            <a href="https://wa.me/263790543013" target="_blank" rel="noreferrer">
+              WhatsApp Support
+            </a>
+            <span>Harare, Zimbabwe</span>
+          </div>
+        </div>
+
+        <div className="container footer-bottom">
+          <span>© 2026 Pedasenticom (pedasenticom.co.zw). All rights reserved.</span>
+          <span>Flagship Product: Edu-Connect (Pedacom) · CIPZ Registered</span>
         </div>
       </footer>
     </div>
