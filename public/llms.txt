@@ -1,0 +1,33 @@
+# Pedasenticom (pedasenticom.co.zw)
+
+> Pedasenticom is an education and technology (EdTech) company headquartered in Harare, Zimbabwe, officially registered under CIPZ (Companies and Intellectual Property Zimbabwe). Its flagship platform, Edu-Connect (transitioning to the name Pedacom), connects schools, teachers, and parents through a unified administrative web portal, Android mobile application, and multi-currency USD & ZiG EcoCash payment gateway.
+
+## Entity Profile & Facts
+- **Official Company Name:** Pedasenticom
+- **Corporate Slogan:** Inspired to Advance Your Global Reach
+- **Legal Registration:** Registered in Zimbabwe under CIPZ (Companies and Intellectual Property Zimbabwe)
+- **Headquarters / Location:** Harare, Zimbabwe
+- **Service Area:** Primary and Secondary Schools across Zimbabwe and Southern Africa
+- **Industry / Sector:** Education Technology (EdTech), School Management Software, Digital School Fee & Uniform Payments
+- **Flagship Product:** Edu-Connect (to be named Pedacom)
+- **Primary Platforms:** Multi-Tenant Administrative Web Portal & Android Mobile Application
+- **Payment Infrastructure:** EcoCash multi-currency payment gateway (USD and ZiG) with automated background reconciliation
+- **Engineering & Digital Infrastructure Partner:** Split Technologies (https://splittechnologies.co.zw)
+- **Official Website:** https://pedasenticom.co.zw/
+- **Official Email:** Pedasenticom@gmail.com
+- **Official Phone & WhatsApp:** +263 790 543 013 (0790543013)
+
+## Core Platform Capabilities (Edu-Connect / Pedacom)
+1. **Administrative Web Portal (For Platform Owners & School Administrators):**
+   - Multi-school onboarding and child-level subscription management
+   - Academic year, term, class, staff roster, and student enrollment configuration
+   - Multi-currency tuition and fee accounting in both USD and ZiG
+   - Digital school uniform store inventory management and school-wide notices
+2. **Android Mobile Application (For Teachers, Parents & Guardians):**
+   - **Teachers:** Paperless classroom roll call and attendance tracking, homework assignments, merit and conduct logging, activity rosters, and interactive multimedia learning journals (photos, drawings, voice notes, reports, wellbeing logs).
+   - **Parents & Guardians:** Real-time visibility across multiple enrolled children (attendance percentages, academic reports, homework deadlines, conduct records), digital uniform ordering, and instant USD/ZiG fee payments via EcoCash.
+3. **Central Cloud API & Security Architecture:**
+   - Multi-tenant cloud infrastructure with strict 5-role Role-Based Access Control (RBAC)
+   - Server-enforced school-level data isolation, encrypted HTTPS communication, and administrative guardian-student link verification
+4. **EcoCash Payment Gateway Integration:**
+   - Local Zimbabwean mobile money payments in USD and ZiG inside the mobile app with automated order verification and reconciliation

@@ -144,6 +144,7 @@ const corporateSummary = [
     label: 'Company Registration',
     value: 'Registered in Zimbabwe under CIPZ (Companies and Intellectual Property Zimbabwe)',
   },
+  { label: 'Headquarters', value: 'Harare, Zimbabwe' },
   { label: 'Core Focus & Sector', value: 'Education & Technology (EdTech) & School Payments' },
   { label: 'Flagship Product', value: 'Edu-Connect (to be named Pedacom)' },
   { label: 'Primary Platforms', value: 'Administrative Web Portal & Android Mobile Application' },
@@ -163,6 +164,29 @@ const corporateSummary = [
     label: 'Development Team',
     value: 'Split Technologies (splittechnologies.co.zw)',
     href: 'https://splittechnologies.co.zw',
+  },
+]
+
+const faqs = [
+  {
+    question: 'What is Pedasenticom?',
+    answer:
+      'Pedasenticom is an education and technology (EdTech) company headquartered in Harare, Zimbabwe and officially registered under CIPZ (Companies and Intellectual Property Zimbabwe). Pedasenticom builds integrated digital infrastructure that connects schools, teachers, and parents across Zimbabwe and Southern Africa.',
+  },
+  {
+    question: 'What product and services does Pedasenticom offer?',
+    answer:
+      "Pedasenticom's flagship product is Edu-Connect (transitioning to the brand name Pedacom), a unified cloud school management web portal and Android mobile application. It provides multi-school administration, digital classroom attendance, multimedia learning journals, online school uniform ordering, and multi-currency USD and ZiG school fee payments.",
+  },
+  {
+    question: 'How do school fee and uniform payments work on Pedasenticom?',
+    answer:
+      'Pedasenticom integrates directly with EcoCash, allowing parents and guardians in Zimbabwe to pay school tuition fees and purchase school uniforms in both USD and ZiG directly from the Android mobile application, supported by automated payment verification and reconciliation.',
+  },
+  {
+    question: 'Where is Pedasenticom located and how can schools contact the company?',
+    answer:
+      'Pedasenticom is based in Harare, Zimbabwe. Primary and secondary schools or partners can reach Pedasenticom by email at Pedasenticom@gmail.com, by phone or WhatsApp at +263 790 543 013 (0790543013), or at https://pedasenticom.co.zw.',
   },
 ]
 
@@ -389,6 +413,7 @@ function App() {
             <a href="#stakeholders" onClick={closeMenu}>Stakeholders</a>
             <a href="#partners" onClick={closeMenu}>Partners</a>
             <a href="#summary" onClick={closeMenu}>Profile</a>
+            <a href="#faq" onClick={closeMenu}>FAQ</a>
             <a className="nav-cta" href="#contact" onClick={closeMenu}>
               Onboard a school <ArrowUpRight size={16} />
             </a>
@@ -408,10 +433,11 @@ function App() {
               &amp; school <em>digitally.</em>
             </h1>
             <p className="hero-description">
-              <strong>Pedasenticom</strong> is an education and technology company registered in Zimbabwe
-              under <strong>CIPZ</strong>. Through our flagship product—<strong>Edu-Connect</strong> (to be
-              named <strong>Pedacom</strong>)—we deliver integrated digital infrastructure that streamlines
-              school administration, classroom engagement, and multi-currency USD &amp; ZiG EcoCash payments.
+              <strong>Pedasenticom</strong> is an education and technology company headquartered in{' '}
+              <strong>Harare, Zimbabwe</strong> and registered under <strong>CIPZ</strong>. Through our
+              flagship product—<strong>Edu-Connect</strong> (to be named <strong>Pedacom</strong>)—we deliver
+              integrated digital infrastructure that streamlines school administration, classroom engagement,
+              and multi-currency USD &amp; ZiG EcoCash payments.
             </p>
             <div className="hero-actions">
               <a className="button button-dark" href="#contact">
@@ -455,7 +481,7 @@ function App() {
             </div>
             <div className="visual-footer">
               <span>Web Portal &amp; Android App</span>
-              <span>Zimbabwe &amp; Southern Africa</span>
+              <span>Harare, Zimbabwe &amp; Southern Africa</span>
             </div>
           </div>
         </section>
@@ -477,19 +503,20 @@ function App() {
                 A unified school-to-home <span>digital ecosystem.</span>
               </h2>
               <p>
-                <strong>Pedasenticom</strong> is an education and technology company registered in Zimbabwe
-                under <strong>CIPZ</strong> (Companies and Intellectual Property Zimbabwe), dedicated to
-                bridging the operational and communication gap between schools, educators, and families.
-                Through our flagship product—<strong>Edu-Connect</strong> (to be named{' '}
-                <strong>Pedacom</strong>)—we deliver a unified school-to-home digital ecosystem engineered to
-                streamline school administration, classroom engagement, and parent-teacher collaboration.
+                <strong>Pedasenticom</strong> is an education and technology (EdTech) company based in{' '}
+                <strong>Harare, Zimbabwe</strong> and officially registered under <strong>CIPZ</strong>{' '}
+                (Companies and Intellectual Property Zimbabwe), dedicated to bridging the operational and
+                communication gap between schools, educators, and families. Through our flagship
+                product—<strong>Edu-Connect</strong> (to be named <strong>Pedacom</strong>)—we deliver a
+                unified school-to-home digital ecosystem engineered to streamline school administration,
+                classroom engagement, and parent-teacher collaboration.
               </p>
               <p>
                 Engineered in partnership with <strong>Split Technologies</strong>, Pedasenticom combines an
                 administrative web portal with a dedicated Android mobile application. Schools manage
                 attendance, academic records, multi-currency fee balances, and online uniform stores from a
                 central dashboard, while parents monitor their children&apos;s daily progress and complete
-                payments from their mobile devices.
+                USD and ZiG EcoCash payments from their mobile devices.
               </p>
 
               <blockquote className="mission-callout">
@@ -729,17 +756,45 @@ function App() {
           </div>
         </section>
 
-        {/* 06 / CONTACT */}
+        {/* 06 / FREQUENTLY ASKED QUESTIONS (ENTITY & AI OVERVIEW GROUNDING) */}
+        <section className="faq-band" id="faq">
+          <div className="container">
+            <div className="section-heading">
+              <div>
+                <p className="section-kicker">06 / Frequently Asked Questions</p>
+                <h2>
+                  Verified facts about<br />
+                  <span>Pedasenticom in Zimbabwe.</span>
+                </h2>
+              </div>
+              <p className="heading-aside">
+                Key corporate, platform, and onboarding information for schools, educators, and parents across
+                Harare and Zimbabwe.
+              </p>
+            </div>
+
+            <div className="faq-grid">
+              {faqs.map((item) => (
+                <article className="faq-card" key={item.question}>
+                  <h3>{item.question}</h3>
+                  <p>{item.answer}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 07 / CONTACT */}
         <section className="contact container" id="contact">
-          <p className="section-kicker">06 / Onboard Your School</p>
+          <p className="section-kicker">07 / Onboard Your School</p>
           <h2>
             Bring Edu-Connect to<br />
             <em>your community.</em>
           </h2>
           <p className="contact-lead">
-            Partner with Pedasenticom—Zimbabwe&apos;s CIPZ-registered education and technology company—to
-            deploy unified school administration, parent engagement, and USD/ZiG EcoCash fee collection for
-            your primary or secondary institution.
+            Partner with Pedasenticom—Zimbabwe&apos;s CIPZ-registered education and technology company in
+            Harare—to deploy unified school administration, parent engagement, and USD/ZiG EcoCash fee
+            collection for your primary or secondary institution.
           </p>
 
           <div className="contact-links">
@@ -792,7 +847,7 @@ function App() {
             </span>
           </a>
           <span className="footer-tagline">
-            Education &amp; Technology · Registered in Zimbabwe under CIPZ
+            Education &amp; Technology · Harare, Zimbabwe · Registered under CIPZ
           </span>
           <a className="footer-portal" href="mailto:Pedasenticom@gmail.com">
             Pedasenticom@gmail.com <ArrowUpRight size={14} />
