@@ -6,6 +6,38 @@ import {
   X,
 } from 'lucide-react'
 
+const heroModes = [
+  {
+    id: 'showcase',
+    code: 'VIEW 01',
+    label: 'Brand Showcase',
+    caption: 'PEDASENTICOM // OFFICIAL PLATFORM STAGE — HARARE, ZIMBABWE',
+  },
+  {
+    id: 'topology',
+    code: 'VIEW 02',
+    label: 'Cloud Topology',
+    caption: 'EDU-CONNECT (PEDACOM) // END-TO-END SYSTEM TOPOLOGY',
+  },
+  {
+    id: 'ledger',
+    code: 'VIEW 03',
+    label: 'EcoCash USD & ZiG',
+    caption: 'AUTOMATED PAYMENT WORKER // DUAL-CURRENCY SCHOOL LEDGER',
+  },
+]
+
+const marqueeItems = [
+  'PEDASENTICOM · HARARE, ZIMBABWE',
+  'REGISTERED UNDER CIPZ',
+  'FLAGSHIP PLATFORM: EDU-CONNECT (PEDACOM)',
+  'ADMINISTRATIVE WEB PORTAL',
+  'ANDROID TEACHER & PARENT APPLICATION',
+  'USD & ZiG ECOCASH PAYMENT GATEWAY',
+  '5-ROLE MULTI-TENANT CLOUD RBAC',
+  'ENGINEERED WITH SPLIT TECHNOLOGIES',
+]
+
 const platformModules = [
   {
     id: 'portal',
@@ -238,6 +270,140 @@ const hexNodes = [
   { cx: 23.8, cy: 56 },
 ]
 
+function useAwwwardsSmoothScroll() {
+  useEffect(() => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const finePointer = window.matchMedia('(pointer: fine)').matches
+
+    let currentY = window.scrollY
+    let targetY = window.scrollY
+    let rafId = null
+    let isAnimating = false
+
+    const updateProgress = () => {
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
+      const ratio = Math.min(1, Math.max(0, window.scrollY / maxScroll))
+      document.documentElement.style.setProperty('--scroll-progress', ratio.toFixed(4))
+    }
+
+    const step = () => {
+      const diff = targetY - currentY
+      if (Math.abs(diff) > 0.45) {
+        currentY += diff * 0.1
+        window.scrollTo(0, Math.round(currentY))
+        updateProgress()
+        rafId = window.requestAnimationFrame(step)
+      } else {
+        currentY = targetY
+        window.scrollTo(0, Math.round(targetY))
+        updateProgress()
+        isAnimating = false
+      }
+    }
+
+    const startLoop = () => {
+      if (!isAnimating) {
+        isAnimating = true
+        rafId = window.requestAnimationFrame(step)
+      }
+    }
+
+    const onWheel = (event) => {
+      if (reducedMotion || !finePointer) return
+      if (document.body.style.overflow === 'hidden') return
+      if (event.ctrlKey || event.metaKey) return
+
+      event.preventDefault()
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+      const delta =
+        event.deltaMode === 1
+          ? event.deltaY * 36
+          : event.deltaMode === 2
+            ? event.deltaY * window.innerHeight
+            : event.deltaY
+
+      targetY = Math.min(maxScroll, Math.max(0, targetY + delta * 0.95))
+      startLoop()
+    }
+
+    const onNativeScroll = () => {
+      if (!isAnimating) {
+        currentY = window.scrollY
+        targetY = window.scrollY
+      }
+      updateProgress()
+    }
+
+    const onAnchorClick = (event) => {
+      const link = event.target.closest('a[href^="#"]')
+      if (!link) return
+      const hash = link.getAttribute('href')
+      if (!hash || hash.length < 2) return
+      const targetEl = document.querySelector(hash)
+      if (!targetEl) return
+
+      event.preventDefault()
+      const headerOffset = 78
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+      const destY =
+        hash === '#top'
+          ? 0
+          : Math.min(
+              maxScroll,
+              Math.max(0, targetEl.getBoundingClientRect().top + window.scrollY - headerOffset)
+            )
+
+      if (reducedMotion || !finePointer) {
+        window.scrollTo({ top: destY, behavior: reducedMotion ? 'auto' : 'smooth' })
+      } else {
+        currentY = window.scrollY
+        targetY = destY
+        startLoop()
+      }
+      window.history.pushState(null, '', hash)
+    }
+
+    updateProgress()
+    window.addEventListener('wheel', onWheel, { passive: false })
+    window.addEventListener('scroll', onNativeScroll, { passive: true })
+    window.addEventListener('resize', updateProgress, { passive: true })
+    document.addEventListener('click', onAnchorClick)
+
+    // Scroll-triggered staggered section & card reveals
+    const revealNodes = document.querySelectorAll('[data-reveal]')
+    let observer = null
+
+    if ('IntersectionObserver' in window && !reducedMotion) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-revealed')
+              observer.unobserve(entry.target)
+            }
+          })
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -48px 0px' }
+      )
+      revealNodes.forEach((node) => {
+        node.classList.add('reveal-ready')
+        observer.observe(node)
+      })
+    } else {
+      revealNodes.forEach((node) => node.classList.add('is-revealed'))
+    }
+
+    return () => {
+      window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('scroll', onNativeScroll)
+      window.removeEventListener('resize', updateProgress)
+      document.removeEventListener('click', onAnchorClick)
+      if (rafId) window.cancelAnimationFrame(rafId)
+      if (observer) observer.disconnect()
+    }
+  }, [])
+}
+
 function IntroLoader() {
   const [phase, setPhase] = useState('active')
   const exitTimerRef = useRef(null)
@@ -256,7 +422,7 @@ function IntroLoader() {
 
   useEffect(() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const minDuration = reducedMotion ? 450 : 2300
+    const minDuration = reducedMotion ? 450 : 2100
     const exitDuration = reducedMotion ? 320 : 760
 
     let minElapsed = false
@@ -284,7 +450,7 @@ function IntroLoader() {
 
     safetyTimerRef.current = window.setTimeout(() => {
       beginExit(exitDuration)
-    }, reducedMotion ? 900 : 4200)
+    }, reducedMotion ? 900 : 3800)
 
     return () => {
       window.removeEventListener('load', onWindowLoad)
@@ -402,15 +568,46 @@ function IntroLoader() {
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [heroMode, setHeroMode] = useState('showcase')
   const [activeModuleId, setActiveModuleId] = useState('portal')
   const [openFaqIndex, setOpenFaqIndex] = useState(0)
+  const heroRef = useRef(null)
+
+  useAwwwardsSmoothScroll()
 
   const closeMenu = () => setMenuOpen(false)
   const activeModule =
     platformModules.find((m) => m.id === activeModuleId) || platformModules[0]
+  const currentHeroMode =
+    heroModes.find((m) => m.id === heroMode) || heroModes[0]
+
+  const handleHeroPointerMove = (event) => {
+    const el = heroRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const x = (event.clientX - rect.left) / rect.width
+    const y = (event.clientY - rect.top) / rect.height
+    const tiltY = ((x - 0.5) * 7).toFixed(2)
+    const tiltX = ((0.5 - y) * 6).toFixed(2)
+    el.style.setProperty('--hero-mx', `${(x * 100).toFixed(1)}%`)
+    el.style.setProperty('--hero-my', `${(y * 100).toFixed(1)}%`)
+    el.style.setProperty('--rig-tilt-x', `${tiltX}deg`)
+    el.style.setProperty('--rig-tilt-y', `${tiltY}deg`)
+  }
+
+  const handleHeroPointerLeave = () => {
+    const el = heroRef.current
+    if (!el) return
+    el.style.setProperty('--rig-tilt-x', '0deg')
+    el.style.setProperty('--rig-tilt-y', '0deg')
+  }
 
   return (
     <div className="site-shell" id="top">
+      <div className="scroll-progress-track" aria-hidden="true">
+        <div className="scroll-progress-fill" />
+      </div>
+
       <IntroLoader />
 
       {/* TOP GLOBAL NAVIGATION BAR */}
@@ -456,19 +653,33 @@ function App() {
       </header>
 
       <main>
-        {/* DARK CINEMATIC PRODUCT STAGE (GEFORCE NOW INSPIRED) */}
-        <section className="hero-stage">
+        {/* STANDOUT AWWWARDS + GEFORCE NOW ARCHITECTURAL HERO STAGE */}
+        <section
+          className="hero-stage"
+          ref={heroRef}
+          onPointerMove={handleHeroPointerMove}
+          onPointerLeave={handleHeroPointerLeave}
+        >
+          <div className="hero-spotlight-beam" aria-hidden="true" />
           <div className="hero-backdrop-grid" aria-hidden="true" />
+          <div className="hero-horizon-glow" aria-hidden="true" />
+
           <div className="container hero-layout">
             <div className="hero-lead">
-              <div className="product-series-bar">
-                <span className="series-tag">FLAGSHIP PLATFORM</span>
-                <span className="series-divider" />
-                <span className="series-name">EDU-CONNECT (PEDACOM)</span>
+              <div className="hero-status-architecture">
+                <div className="product-series-bar">
+                  <span className="series-led" aria-hidden="true" />
+                  <span className="series-tag">FLAGSHIP PLATFORM</span>
+                  <span className="series-divider" />
+                  <span className="series-name">EDU-CONNECT (PEDACOM)</span>
+                </div>
+                <span className="jurisdiction-pill">CIPZ REGISTERED · HARARE, ZW</span>
               </div>
 
-              <h1>
-                Integrated Digital Infrastructure for Schools in Zimbabwe.
+              <h1 className="hero-monumental-title">
+                <span className="title-line">Integrated Digital</span>
+                <span className="title-line">Infrastructure for</span>
+                <span className="title-line accent-line">Schools in Zimbabwe.</span>
               </h1>
 
               <p className="hero-subcopy">
@@ -490,35 +701,141 @@ function App() {
 
               <div className="hero-spec-strip" aria-label="Core platform capabilities">
                 <div className="spec-cell">
+                  <span className="spec-index">01 // PAYMENTS</span>
                   <span className="spec-number">USD &amp; ZiG</span>
                   <span className="spec-caption">EcoCash Fee &amp; Store Gateway</span>
                 </div>
                 <div className="spec-cell">
+                  <span className="spec-index">02 // CLIENTS</span>
                   <span className="spec-number">Web + Android</span>
                   <span className="spec-caption">Admin Portal &amp; Mobile App</span>
                 </div>
                 <div className="spec-cell">
+                  <span className="spec-index">03 // GOVERNANCE</span>
                   <span className="spec-number">5-Role RBAC</span>
                   <span className="spec-caption">Multi-Tenant Cloud Security</span>
                 </div>
               </div>
             </div>
 
-            <div className="hero-display-Rig">
+            {/* 3D INTERACTIVE COMMAND RIG */}
+            <div className="hero-rig-perspective">
+              <div className="floating-hud hud-top-left" aria-hidden="true">
+                <span className="hud-kicker">CLOUD TENANCY</span>
+                <strong>5-Role RBAC · HTTPS</strong>
+              </div>
+
+              <div className="floating-hud hud-bottom-right" aria-hidden="true">
+                <span className="hud-kicker">SETTLEMENT ENGINE</span>
+                <strong>EcoCash USD &amp; ZiG Live</strong>
+              </div>
+
               <div className="display-frame">
+                <div className="display-glare" aria-hidden="true" />
+
                 <div className="display-topbar">
-                  <span className="display-title">PEDASENTICOM // OFFICIAL PLATFORM SHOWCASE</span>
+                  <span className="display-title">{currentHeroMode.caption}</span>
                   <span className="display-region">HARARE · ZIMBABWE</span>
                 </div>
-                <div className="display-screen">
-                  <img
-                    src="/pedasenticom-logo.jpg"
-                    alt="Pedasenticom — Inspired to Advance Your Global Reach"
-                    width="1024"
-                    height="559"
-                    decoding="async"
-                  />
+
+                {/* INTERACTIVE HERO VIEW SWITCHER */}
+                <div className="hero-mode-tabs" role="tablist" aria-label="Hero showcase view">
+                  {heroModes.map((mode) => (
+                    <button
+                      key={mode.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={heroMode === mode.id}
+                      className={`hero-mode-btn ${heroMode === mode.id ? 'is-active' : ''}`}
+                      onClick={() => setHeroMode(mode.id)}
+                    >
+                      <span className="mode-code">{mode.code}</span>
+                      <span className="mode-label">{mode.label}</span>
+                    </button>
+                  ))}
                 </div>
+
+                <div className="display-screen">
+                  {heroMode === 'showcase' && (
+                    <div className="hero-view-showcase">
+                      <img
+                        src="/pedasenticom-logo.jpg"
+                        alt="Pedasenticom — Inspired to Advance Your Global Reach"
+                        width="1024"
+                        height="559"
+                        decoding="async"
+                      />
+                      <div className="showcase-overlay-bar">
+                        <span>OFFICIAL BRAND IDENTITY // PEDASENTICOM</span>
+                        <span>INSPIRED TO ADVANCE YOUR GLOBAL REACH</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {heroMode === 'topology' && (
+                    <div className="hero-view-panel">
+                      <div className="topology-header">
+                        <span>MULTI-TENANT CLOUD ARCHITECTURE</span>
+                        <span className="status-chip">ALL NODES OPERATIONAL</span>
+                      </div>
+                      <div className="topology-grid">
+                        <div className="topology-node">
+                          <span className="node-step">NODE 01 // WEB PORTAL</span>
+                          <strong>School Admin Console</strong>
+                          <p>Term setup, fee structures, staff rosters, and uniform inventory.</p>
+                        </div>
+                        <div className="topology-node">
+                          <span className="node-step">NODE 02 // CLOUD API</span>
+                          <strong>Laravel 5-Role RBAC</strong>
+                          <p>Strict per-school tenant isolation and encrypted HTTPS enforcement.</p>
+                        </div>
+                        <div className="topology-node">
+                          <span className="node-step">NODE 03 // ANDROID APP</span>
+                          <strong>Teacher &amp; Parent App</strong>
+                          <p>Digital roll call, multimedia learning journals, and child reports.</p>
+                        </div>
+                        <div className="topology-node">
+                          <span className="node-step">NODE 04 // PAYMENT WORKER</span>
+                          <strong>EcoCash USD &amp; ZiG</strong>
+                          <p>Automated background payment verification and ledger reconciliation.</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {heroMode === 'ledger' && (
+                    <div className="hero-view-panel">
+                      <div className="topology-header">
+                        <span>ECOCASH DUAL-CURRENCY SETTLEMENT ENGINE</span>
+                        <span className="status-chip gold">AUTO-RECONCILED</span>
+                      </div>
+                      <div className="ledger-list">
+                        <div className="ledger-item">
+                          <div>
+                            <strong>Term Tuition &amp; Levy Settlement</strong>
+                            <span>EcoCash Mobile Prompt · Instant Parent Receipt</span>
+                          </div>
+                          <span className="ledger-currency">USD / ZiG</span>
+                        </div>
+                        <div className="ledger-item">
+                          <div>
+                            <strong>Digital School Uniform Store Order</strong>
+                            <span>Inventory Reserved · Background Worker Verified</span>
+                          </div>
+                          <span className="ledger-currency">VERIFIED</span>
+                        </div>
+                        <div className="ledger-item">
+                          <div>
+                            <strong>School Finance Ledger Sync</strong>
+                            <span>Real-Time Balance Update on Admin Web Portal</span>
+                          </div>
+                          <span className="ledger-currency">LIVE SYNC</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <div className="display-telemetry">
                   <div>
                     <span className="telemetry-key">REGISTRATION</span>
@@ -534,6 +851,18 @@ function App() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* KINETIC ARCHITECTURAL TICKER RIBBON */}
+          <div className="hero-marquee" aria-label="Platform highlights">
+            <div className="marquee-track">
+              {[...marqueeItems, ...marqueeItems].map((item, idx) => (
+                <span className="marquee-item" key={idx}>
+                  <span className="marquee-diamond" aria-hidden="true" />
+                  {item}
+                </span>
+              ))}
             </div>
           </div>
 
@@ -554,7 +883,7 @@ function App() {
         </section>
 
         {/* INTERACTIVE PLATFORM SPOTLIGHT (TABBED MODULE SWITCHER + LIVE CONSOLE VIEW) */}
-        <section className="spotlight-section" id="spotlight">
+        <section className="spotlight-section" id="spotlight" data-reveal>
           <div className="container">
             <div className="section-banner">
               <div>
@@ -631,7 +960,7 @@ function App() {
         </section>
 
         {/* STAKEHOLDER ROLE MATRIX */}
-        <section className="roles-section" id="roles">
+        <section className="roles-section" id="roles" data-reveal>
           <div className="container">
             <div className="section-banner">
               <div>
@@ -646,7 +975,7 @@ function App() {
 
             <div className="roles-grid">
               {roleMatrix.map((group) => (
-                <article className="role-panel" key={group.role}>
+                <article className="role-panel" key={group.role} data-reveal>
                   <div className="role-panel-top">
                     <span className="role-tag">{group.tag}</span>
                     <h3>{group.role}</h3>
@@ -664,7 +993,7 @@ function App() {
         </section>
 
         {/* DARK INFRASTRUCTURE & PARTNERS BAND */}
-        <section className="infra-section" id="infrastructure">
+        <section className="infra-section" id="infrastructure" data-reveal>
           <div className="container">
             <div className="section-banner light">
               <div>
@@ -678,7 +1007,7 @@ function App() {
             </div>
 
             <div className="infra-bento">
-              <article className="infra-card primary-span">
+              <article className="infra-card primary-span" data-reveal>
                 <span className="infra-eyebrow">MULTI-TENANT CLOUD BACKBONE</span>
                 <h3>Zero-Friction School Onboarding &amp; Strict Data Isolation</h3>
                 <p>
@@ -703,7 +1032,7 @@ function App() {
               </article>
 
               {partners.map((partner) => (
-                <article className="infra-card" key={partner.name}>
+                <article className="infra-card" key={partner.name} data-reveal>
                   <span className="infra-eyebrow">{partner.role}</span>
                   <h3>{partner.name}</h3>
                   <p>{partner.description}</p>
@@ -724,7 +1053,7 @@ function App() {
         </section>
 
         {/* ENTERPRISE SPECIFICATION SHEET & CORPORATE PROFILE */}
-        <section className="specs-section" id="specifications">
+        <section className="specs-section" id="specifications" data-reveal>
           <div className="container">
             <div className="specs-layout">
               <div className="specs-intro">
@@ -782,7 +1111,7 @@ function App() {
         </section>
 
         {/* INTERACTIVE ACCORDION FAQ (GEFORCE NOW STYLE + FULL DOM FOR GOOGLE SEO) */}
-        <section className="faq-section" id="faq">
+        <section className="faq-section" id="faq" data-reveal>
           <div className="container">
             <div className="section-banner">
               <div>
@@ -820,7 +1149,7 @@ function App() {
         </section>
 
         {/* DIRECT SCHOOL ONBOARDING & CONTACT STAGE */}
-        <section className="contact-stage" id="contact">
+        <section className="contact-stage" id="contact" data-reveal>
           <div className="container contact-box">
             <div className="contact-copy">
               <p className="kicker-line gold">SCHOOL ONBOARDING &amp; PARTNERSHIPS</p>
