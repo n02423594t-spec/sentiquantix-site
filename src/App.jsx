@@ -1,215 +1,183 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
+  ArrowLeft,
+  ArrowRight,
   ArrowUpRight,
   ChevronDown,
   Menu,
   X,
 } from 'lucide-react'
+import EclipseCanvas from './components/EclipseCanvas.jsx'
+import ZimbabweMap from './components/ZimbabweMap.jsx'
 
-const heroModes = [
+const navSections = [
+  { id: 'about', label: 'About', step: '01', short: 'About' },
+  { id: 'platform', label: 'Platform', step: '02', short: 'Platform' },
+  { id: 'map', label: 'Coverage', step: '03', short: 'Coverage' },
+  { id: 'specifications', label: 'Specifications', step: '04', short: 'Profile' },
+  { id: 'faq', label: 'FAQ', step: '05', short: 'FAQ' },
+]
+
+const journeySteps = [
+  { id: 'hero', step: '00', label: 'Beginning' },
+  { id: 'about', step: '01', label: 'About' },
+  { id: 'platform', step: '02', label: 'Platform' },
+  { id: 'map', step: '03', label: 'Coverage' },
+  { id: 'specifications', step: '04', label: 'Profile' },
+  { id: 'contact', step: '05', label: 'Contact' },
+]
+
+const aboutSlides = [
   {
-    id: 'showcase',
-    code: 'VIEW 01',
-    label: 'Brand Showcase',
-    caption: 'PEDASENTICOM // OFFICIAL PLATFORM STAGE — HARARE, ZIMBABWE',
+    id: 'brand',
+    eyebrow: 'OFFICIAL CORPORATE IDENTITY · HARARE, ZIMBABWE',
+    title: 'Pedasenticom — Connecting Home & School',
+    type: 'image',
+    src: '/pedasenticom-logo.jpg',
+    alt: 'Pedasenticom — Inspired to Advance Your Global Reach',
+    caption: 'CIPZ-registered Education & Technology company delivering Edu-Connect (Pedacom).',
   },
   {
-    id: 'topology',
-    code: 'VIEW 02',
-    label: 'Cloud Topology',
-    caption: 'EDU-CONNECT (PEDACOM) // END-TO-END SYSTEM TOPOLOGY',
+    id: 'portal-slide',
+    eyebrow: 'ADMINISTRATIVE WEB PORTAL',
+    title: 'Multi-School Cloud Command Center',
+    type: 'console',
+    metrics: [
+      { k: 'TENANCY', v: 'Multi-School Isolated' },
+      { k: 'FINANCE', v: 'USD & ZiG Ledgers' },
+      { k: 'ACCESS', v: '5-Role Server RBAC' },
+    ],
+    lines: [
+      ['Academic Year & Class Setup', 'ACTIVE'],
+      ['Tuition Accounting & EcoCash Sync', 'VERIFIED'],
+      ['School Uniform Store Inventory', 'LIVE'],
+      ['School-Wide Notice Dispatch', 'READY'],
+    ],
+    caption: 'School leadership configures terms, staff rosters, fee balances, and uniform inventory in one portal.',
   },
   {
-    id: 'ledger',
-    code: 'VIEW 03',
-    label: 'EcoCash USD & ZiG',
-    caption: 'AUTOMATED PAYMENT WORKER // DUAL-CURRENCY SCHOOL LEDGER',
+    id: 'mobile-slide',
+    eyebrow: 'EDU-CONNECT ANDROID APPLICATION',
+    title: 'Real-Time Classroom & Guardian Experience',
+    type: 'console',
+    metrics: [
+      { k: 'TEACHERS', v: 'Roll Call & Journals' },
+      { k: 'PARENTS', v: 'Multi-Child View' },
+      { k: 'PAYMENTS', v: 'EcoCash In-App' },
+    ],
+    lines: [
+      ['Digital Attendance Register', 'SYNCED'],
+      ['Multimedia Learning Journals (Photos & Voice)', 'PUBLISHED'],
+      ['Verified Guardian-Student Linking', 'ENFORCED'],
+      ['USD & ZiG Uniform & Fee Checkout', 'CONFIRMED'],
+    ],
+    caption: 'Teachers record daily classroom activity while parents track progress and pay fees from Android.',
   },
 ]
 
-const marqueeItems = [
-  'PEDASENTICOM · HARARE, ZIMBABWE',
-  'REGISTERED UNDER CIPZ',
-  'FLAGSHIP PLATFORM: EDU-CONNECT (PEDACOM)',
-  'ADMINISTRATIVE WEB PORTAL',
-  'ANDROID TEACHER & PARENT APPLICATION',
-  'USD & ZiG ECOCASH PAYMENT GATEWAY',
-  '5-ROLE MULTI-TENANT CLOUD RBAC',
-  'ENGINEERED WITH SPLIT TECHNOLOGIES',
+const partnerMarqueeItems = [
+  { name: 'Pedasenticom', sub: 'CIPZ Registered · Harare, ZW', href: '#about' },
+  { name: 'Edu-Connect (Pedacom)', sub: 'Flagship School Ecosystem', href: '#platform' },
+  { name: 'Split Technologies', sub: 'Engineering & Cloud Partner', href: 'https://splittechnologies.co.zw', external: true },
+  { name: 'EcoCash Gateway', sub: 'USD & ZiG Mobile Payments', href: '#platform' },
+  { name: 'Multi-Tenant Laravel Cloud', sub: '5-Role RBAC Isolation', href: '#specifications' },
+  { name: 'Android & Web Portal', sub: 'Primary & Secondary Ready', href: '#map' },
 ]
 
-const platformModules = [
+const platformCaseStudies = [
   {
-    id: 'portal',
-    tabLabel: 'Web Admin Console',
-    code: 'MODULE // WEB-ADMIN',
-    title: 'Administrative Web Portal',
-    audience: 'For Platform Owners & School Administrators',
-    summary:
-      'Central command console for multi-school onboarding, academic year and class configuration, teacher assignments, USD and ZiG fee accounting, uniform store inventory, and institution-wide notices.',
-    highlights: [
-      { label: 'Multi-School Control', detail: 'Onboard primary and secondary institutions with child-level subscription management.' },
-      { label: 'Academic Structuring', detail: 'Configure terms, classes, teacher rosters, and student enrollments from one console.' },
-      { label: 'Finance & Uniform Store', detail: 'Manage dual-currency tuition ledgers and live uniform stock levels.' },
-    ],
-    consolePreview: {
-      windowTitle: 'EDU-CONNECT // ADMINISTRATIVE CONSOLE — HARARE, ZW',
-      status: 'CLOUD SYNC ACTIVE · 5-ROLE RBAC',
-      metrics: [
-        { label: 'ACTIVE TERM', value: 'Term 3 · 2026' },
-        { label: 'CURRENCY LEDGERS', value: 'USD & ZiG Live' },
-        { label: 'DATA ISOLATION', value: 'Tenant-Locked' },
-      ],
-      rows: [
-        { col1: 'Tuition & Levy Ledger', col2: 'EcoCash Auto-Reconciled', badge: 'VERIFIED' },
-        { col1: 'School Uniform Inventory', col2: 'In-App Store Catalog Synced', badge: 'ONLINE' },
-        { col1: 'Staff & Class Rosters', col2: 'Role Permissions Enforced', badge: 'ACTIVE' },
-        { col1: 'Institution Broadcasts', col2: 'Instant Parent Push & Portal', badge: 'READY' },
-      ],
-    },
-  },
-  {
-    id: 'mobile-teacher',
-    tabLabel: 'Teacher Android App',
-    code: 'MODULE // TEACHER-MOBILE',
-    title: 'Classroom Workflow Application',
-    audience: 'For Educators & Class Teachers',
-    summary:
-      'Purpose-built Android workspace eliminating paper registers. Teachers record daily roll call, publish homework deadlines, log standardized merits and conduct notes, and share multimedia learning journals.',
-    highlights: [
-      { label: 'Digital Roll Call', detail: 'One-tap daily attendance that updates school records and parent dashboards immediately.' },
-      { label: 'Learning Journals', detail: 'Publish student work samples—photos, drawings, voice notes, and wellbeing updates.' },
-      { label: 'Homework & Conduct', detail: 'Assign coursework and log merits using school-standardized categories.' },
-    ],
-    consolePreview: {
-      windowTitle: 'EDU-CONNECT ANDROID // EDUCATOR WORKSPACE',
-      status: 'REAL-TIME CLASSROOM SYNC',
-      metrics: [
-        { label: 'ATTENDANCE', value: 'Instant Roll Call' },
-        { label: 'JOURNALS', value: 'Photo · Voice · Notes' },
-        { label: 'ASSESSMENTS', value: 'Merits & Homework' },
-      ],
-      rows: [
-        { col1: 'Morning Attendance Register', col2: 'Synced to Admin & Parent Profiles', badge: 'COMPLETED' },
-        { col1: 'Multimedia Learning Journal', col2: 'Student Portfolio & Voice Notes', badge: 'PUBLISHED' },
-        { col1: 'Homework & Syllabus Tasks', col2: 'Due Dates Sent to Guardians', badge: 'ASSIGNED' },
-        { col1: 'Merit & Conduct Logging', col2: 'Standardized School Categories', badge: 'LOGGED' },
-      ],
-    },
-  },
-  {
-    id: 'mobile-parent',
-    tabLabel: 'Parent & Guardian App',
-    code: 'MODULE // GUARDIAN-MOBILE',
-    title: 'Parent & Family Experience',
-    audience: 'For Parents & Verified Guardians',
-    summary:
-      'Complete visibility across every enrolled child from a single smartphone. Switch between children to review attendance, academic reports, homework, and fee balances, or order school uniforms and pay via EcoCash.',
-    highlights: [
-      { label: 'Multi-Child Switcher', detail: 'Monitor attendance percentages, academic reports, and conduct across siblings.' },
-      { label: 'In-App Uniform Shop', detail: 'Browse sizes, place uniform orders, and pay directly inside the Android application.' },
-      { label: 'Verified Guardian Linking', detail: 'Administrative verification protects student records from unauthorized access.' },
-    ],
-    consolePreview: {
-      windowTitle: 'EDU-CONNECT ANDROID // PARENT & GUARDIAN PORTAL',
-      status: 'GUARDIAN LINK VERIFIED',
-      metrics: [
-        { label: 'STUDENT PROFILES', value: 'Multi-Child View' },
-        { label: 'FEE SETTLEMENT', value: 'USD / ZiG EcoCash' },
-        { label: 'UNIFORM STORE', value: 'Direct In-App Order' },
-      ],
-      rows: [
-        { col1: 'Live Attendance & Conduct', col2: 'Real-Time Classroom Feed', badge: 'UPDATED' },
-        { col1: 'Term Academic Reports', col2: 'Official School Assessments', badge: 'AVAILABLE' },
-        { col1: 'Tuition Balance & Statement', col2: 'Pay Now in USD or ZiG via EcoCash', badge: 'INSTANT' },
-        { col1: 'School Uniform Order', col2: 'Confirmed by Background Worker', badge: 'PAID' },
-      ],
-    },
-  },
-  {
-    id: 'cloud-ecocash',
-    tabLabel: 'Cloud API & EcoCash',
-    code: 'MODULE // CORE-INFRASTRUCTURE',
-    title: 'Laravel Cloud API & EcoCash Payment Engine',
-    audience: 'System Infrastructure & School Finance',
-    summary:
-      'Enterprise Laravel cloud backbone enforcing 5-role access control and strict school data isolation, paired with an automated EcoCash payment worker that processes and reconciles USD and ZiG transactions.',
-    highlights: [
-      { label: 'Dual-Currency EcoCash', detail: 'Native USD and ZiG mobile money checkout for school fees and uniform purchases.' },
-      { label: 'Automated Reconciliation', detail: 'Dedicated background payment worker verifies and updates payment statuses automatically.' },
-      { label: '5-Role Cloud RBAC', detail: 'Encrypted HTTPS API guarantees staff and parents only access authorized records.' },
-    ],
-    consolePreview: {
-      windowTitle: 'PEDASENTICOM CLOUD // API & ECOCASH WORKER',
-      status: 'HTTPS TLS · 5-ROLE RBAC ENFORCED',
-      metrics: [
-        { label: 'GATEWAY', value: 'EcoCash Zimbabwe' },
-        { label: 'CURRENCIES', value: 'USD & ZiG Native' },
-        { label: 'RECONCILIATION', value: 'Automated Worker' },
-      ],
-      rows: [
-        { col1: 'Role-Based Access Control', col2: '5 Distinct Institutional Roles', badge: 'ENFORCED' },
-        { col1: 'Multi-Tenant Isolation', col2: 'Strict Per-School Database Scope', badge: 'LOCKED' },
-        { col1: 'EcoCash Payment Dispatch', col2: 'USD & ZiG Mobile Prompt', badge: 'ACTIVE' },
-        { col1: 'Background Settlement Worker', col2: 'Auto-Updates School Ledger', badge: 'VERIFIED' },
-      ],
-    },
-  },
-]
-
-const roleMatrix = [
-  {
-    role: 'Schools & Administrators',
-    tag: 'INSTITUTIONAL CONTROL',
-    headline: 'Centralized Multi-School Administration',
-    points: [
-      'Configure academic years, terms, classes, staff rosters, and student enrollments from a single web portal.',
-      'Track tuition balances in both USD and ZiG and operate a digital uniform store with automated EcoCash confirmation.',
-      'Enforce strict data governance so administrators and staff only access records belonging to their school.',
-    ],
-  },
-  {
-    role: 'Educators & Teachers',
-    tag: 'CLASSROOM EXECUTION',
-    headline: 'Paperless Teaching & Student Journals',
-    points: [
-      'Complete daily class attendance, assign homework, manage activity rosters, and log merits or conduct notes on Android.',
-      'Publish multimedia learning journals—including photos, drawings, voice notes, reports, and wellbeing logs—directly to parents.',
-      'Eliminate manual paper registers and end-of-term reporting bottlenecks with real-time cloud synchronization.',
-    ],
-  },
-  {
-    role: 'Parents & Guardians',
-    tag: 'HOME-TO-SCHOOL LINK',
-    headline: 'Real-Time Visibility & Mobile Payments',
-    points: [
-      'Switch effortlessly between multiple enrolled children to view attendance percentages, homework deadlines, and reports.',
-      'Pay tuition fees and purchase school uniforms in USD or ZiG using EcoCash directly inside the mobile app.',
-      'Administrative verification of every guardian-student link safeguards student privacy and institutional security.',
-    ],
-  },
-]
-
-const partners = [
-  {
-    name: 'Split Technologies',
-    role: 'Engineering & Digital Infrastructure Partner',
+    id: 'web-portal',
+    theme: 'light',
+    kicker: 'PLATFORM MODULE 01 · SCHOOL ADMINISTRATION',
+    partnerLabel: 'PEDASENTICOM WEB PORTAL',
+    title: 'Administrative Web Portal & Multi-School Console',
+    category: 'School Leadership & Finance',
     description:
-      'Turning ambitious ideas into resilient digital systems, cloud-native backends, and high-performance web and mobile applications engineered for clarity, speed, and scale.',
-    href: 'https://splittechnologies.co.zw',
-    linkLabel: 'splittechnologies.co.zw',
+      'Designed for platform owners and school administrators to manage institutional operations without fragmented spreadsheets. Onboard primary and secondary schools, manage child-level subscriptions, configure academic years, classes, and teacher rosters, track USD and ZiG tuition ledgers, operate an online uniform store, and publish school-wide notices under strict per-school data isolation.',
+    specs: [
+      'Multi-school onboarding & child-level subscription control',
+      'Academic year, term, class, and teacher assignment workflows',
+      'Dual-currency USD & ZiG fee accounting and uniform inventory',
+    ],
+    visualType: 'logo',
+    visualTitle: 'WEB ADMIN CONSOLE // SCHOOL OPERATIONS',
+    visualStats: [
+      { label: 'TENANT SCOPE', val: 'Strict School Isolation' },
+      { label: 'FEE CURRENCIES', val: 'USD & ZiG Native' },
+      { label: 'ROLE SECURITY', val: '5-Role Server RBAC' },
+    ],
   },
   {
-    name: 'EcoCash',
-    role: 'Payment Infrastructure',
+    id: 'teacher-app',
+    theme: 'dark',
+    kicker: 'PLATFORM MODULE 02 · EDUCATORS',
+    partnerLabel: 'EDU-CONNECT ANDROID · TEACHERS',
+    title: 'Paperless Classroom Workflows & Learning Journals',
+    category: 'Teachers & Faculty',
     description:
-      "Zimbabwe's leading mobile money payment gateway enabling secure local USD and ZiG transactions directly within the mobile application.",
+      'Built for classroom educators on Android to replace manual attendance books and delayed end-of-term communication. Teachers record daily roll call in seconds, assign homework deadlines, manage activity rosters, log merits or conduct notes using school-standardized categories, and share interactive multimedia learning journals—photos, drawings, voice notes, academic reports, and wellbeing logs—directly with linked parents.',
+    specs: [
+      'Instant digital roll call synced to school administration',
+      'Multimedia learning journals: photos, drawings, voice notes & reports',
+      'Standardized merit, conduct, homework, and activity roster logging',
+    ],
+    visualType: 'console',
+    visualTitle: 'ANDROID EDUCATOR WORKSPACE // CLASSROOM FEED',
+    visualStats: [
+      { label: 'DAILY ROLL CALL', val: 'Instant Cloud Sync' },
+      { label: 'PORTFOLIO MEDIA', val: 'Photo · Voice · Report' },
+      { label: 'HOMEWORK', val: 'Live Guardian Alerts' },
+    ],
+  },
+  {
+    id: 'parent-app',
+    theme: 'light',
+    kicker: 'PLATFORM MODULE 03 · PARENTS & GUARDIANS',
+    partnerLabel: 'EDU-CONNECT ANDROID · FAMILIES',
+    title: 'Comprehensive Multi-Child Visibility & Uniform Commerce',
+    category: 'Parents & Verified Guardians',
+    description:
+      'Parents and guardians stay connected to every enrolled child from one verified mobile account. Switch seamlessly between siblings to inspect attendance percentages, academic reports, homework deadlines, conduct logs, and tuition fee balances. Browse and order school uniforms directly inside the Android app, safeguarded by administrative verification of every guardian-student link.',
+    specs: [
+      'Seamless multi-child switching for families with multiple students',
+      'Real-time visibility of attendance, reports, notices, and fee balances',
+      'Admin-verified guardian linking protecting every student record',
+    ],
+    visualType: 'console',
+    visualTitle: 'ANDROID GUARDIAN PORTAL // FAMILY DASHBOARD',
+    visualStats: [
+      { label: 'CHILD SWITCHER', val: 'Multi-Student Profile' },
+      { label: 'UNIFORM SHOP', val: 'In-App Order & Pay' },
+      { label: 'PRIVACY', val: 'Admin-Verified Link' },
+    ],
+  },
+  {
+    id: 'ecocash-api',
+    theme: 'dark',
+    kicker: 'PLATFORM MODULE 04 · PAYMENTS & CLOUD API',
+    partnerLabel: 'ECOCASH & LARAVEL CLOUD BACKBONE',
+    title: 'Automated USD & ZiG EcoCash Settlement Engine',
+    category: 'Multi-Currency School Finance',
+    description:
+      'Powered by a resilient Laravel cloud API engineered in partnership with Split Technologies, every request passes through encrypted HTTPS with strict 5-role access enforcement. Integrated directly with EcoCash, the platform processes online school tuition and uniform payments in both USD and ZiG, backed by a dedicated background payment worker that automatically verifies and reconciles every transaction.',
+    specs: [
+      'Native USD & ZiG EcoCash mobile money checkout inside Android',
+      'Dedicated background worker for automated payment verification',
+      'Encrypted HTTPS API, automated invitation emails, and 5-role RBAC',
+    ],
+    visualType: 'console',
+    visualTitle: 'PAYMENT WORKER // ECOCASH RECONCILIATION',
+    visualStats: [
+      { label: 'GATEWAY', val: 'EcoCash Zimbabwe' },
+      { label: 'SETTLEMENT', val: 'Auto-Reconciled Worker' },
+      { label: 'ENGINEERING', val: 'Split Technologies' },
+    ],
   },
 ]
 
 const corporateSpecs = [
   { label: 'Company Name', value: 'Pedasenticom' },
-  { label: 'Official Domain', value: 'pedasenticom.co.zw', href: 'https://pedasenticom.co.zw' },
+  { label: 'Official Website', value: 'pedasenticom.co.zw', href: 'https://pedasenticom.co.zw' },
   {
     label: 'Legal Registration',
     value: 'Registered in Zimbabwe under CIPZ (Companies and Intellectual Property Zimbabwe)',
@@ -217,8 +185,8 @@ const corporateSpecs = [
   { label: 'Headquarters', value: 'Harare, Zimbabwe' },
   { label: 'Industry Sector', value: 'Education & Technology (EdTech) · School Management & Payments' },
   { label: 'Flagship Platform', value: 'Edu-Connect (transitioning to Pedacom)' },
-  { label: 'Client Platforms', value: 'Administrative Web Portal & Android Mobile Application' },
-  { label: 'Payment Gateway', value: 'EcoCash Multi-Currency Integration (USD & ZiG)' },
+  { label: 'Primary Platforms', value: 'Administrative Web Portal & Android Mobile Application' },
+  { label: 'Payment Infrastructure', value: 'EcoCash Multi-Currency Gateway (USD & ZiG)' },
   {
     label: 'Engineering Partner',
     value: 'Split Technologies (splittechnologies.co.zw)',
@@ -231,7 +199,7 @@ const corporateSpecs = [
     external: false,
   },
   {
-    label: 'Official Telephone & WhatsApp',
+    label: 'Telephone & WhatsApp',
     value: '+263 790 543 013 (0790543013)',
     href: 'tel:+263790543013',
     external: false,
@@ -261,16 +229,85 @@ const faqs = [
   },
 ]
 
-const hexNodes = [
-  { cx: 100, cy: 12 },
-  { cx: 176.2, cy: 56 },
-  { cx: 176.2, cy: 144 },
-  { cx: 100, cy: 188 },
-  { cx: 23.8, cy: 144 },
-  { cx: 23.8, cy: 56 },
-]
+const HERO_FINAL_LINES = ['Local Strength.', 'National Scale.']
 
-function useAwwwardsSmoothScroll() {
+export default function App() {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [overHero, setOverHero] = useState(true)
+  const [activeSection, setActiveSection] = useState('hero')
+  const [heroProgress, setHeroProgress] = useState(0)
+  const [aboutSlideIdx, setAboutSlideIdx] = useState(0)
+  const [caseIdx, setCaseIdx] = useState(0)
+  const [openFaqIndex, setOpenFaqIndex] = useState(0)
+  const [soundOn, setSoundOn] = useState(false)
+  const [navIndicator, setNavIndicator] = useState({ left: 0, width: 0 })
+
+  const heroSectionRef = useRef(null)
+  const heroProgressRef = useRef(0)
+  const navListRef = useRef(null)
+  const audioCtxRef = useRef(null)
+  const masterGainRef = useRef(null)
+
+  const closeMenu = () => setMenuOpen(false)
+
+  // Toggle gentle Web Audio API ambient space pad (Stanza27 inspiration — off until user clicks)
+  const toggleAmbientSound = () => {
+    try {
+      if (!soundOn) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext
+        if (!AudioCtx) return
+        if (!audioCtxRef.current) {
+          const ctx = new AudioCtx()
+          const master = ctx.createGain()
+          master.gain.value = 0.0001
+          const filter = ctx.createBiquadFilter()
+          filter.type = 'lowpass'
+          filter.frequency.value = 420
+          filter.connect(master)
+          master.connect(ctx.destination)
+
+          // Soft D-major9 ambient chord (73.42Hz, 110Hz, 146.83Hz, 185Hz)
+          ;[73.42, 110.0, 146.83, 185.0].forEach((freq, i) => {
+            const osc = ctx.createOscillator()
+            osc.type = i % 2 === 0 ? 'sine' : 'triangle'
+            osc.frequency.value = freq
+            const g = ctx.createGain()
+            g.gain.value = i === 0 ? 0.16 : 0.06
+            osc.connect(g)
+            g.connect(filter)
+            osc.start()
+          })
+
+          audioCtxRef.current = ctx
+          masterGainRef.current = master
+        }
+        if (audioCtxRef.current.state === 'suspended') {
+          audioCtxRef.current.resume()
+        }
+        masterGainRef.current.gain.cancelScheduledValues(audioCtxRef.current.currentTime)
+        masterGainRef.current.gain.linearRampToValueAtTime(0.18, audioCtxRef.current.currentTime + 0.8)
+        setSoundOn(true)
+      } else {
+        if (audioCtxRef.current && masterGainRef.current) {
+          masterGainRef.current.gain.cancelScheduledValues(audioCtxRef.current.currentTime)
+          masterGainRef.current.gain.linearRampToValueAtTime(0.0001, audioCtxRef.current.currentTime + 0.5)
+        }
+        setSoundOn(false)
+      }
+    } catch {
+      setSoundOn(false)
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      if (audioCtxRef.current) {
+        audioCtxRef.current.close().catch(() => {})
+      }
+    }
+  }, [])
+
+  // Inertial Smooth Scroll + Citadel Pinned Hero Progress + Scrollspy + Reveals
   useEffect(() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const finePointer = window.matchMedia('(pointer: fine)').matches
@@ -280,10 +317,39 @@ function useAwwwardsSmoothScroll() {
     let rafId = null
     let isAnimating = false
 
-    const updateProgress = () => {
+    const syncScrollState = () => {
+      const scrollY = window.scrollY
       const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
-      const ratio = Math.min(1, Math.max(0, window.scrollY / maxScroll))
-      document.documentElement.style.setProperty('--scroll-progress', ratio.toFixed(4))
+      document.documentElement.style.setProperty(
+        '--scroll-progress',
+        Math.min(1, Math.max(0, scrollY / maxScroll)).toFixed(4)
+      )
+
+      // Compute Citadel pinned hero runway progress (0 -> 1)
+      const heroEl = heroSectionRef.current
+      if (heroEl) {
+        const rect = heroEl.getBoundingClientRect()
+        const runway = Math.max(1, heroEl.offsetHeight - window.innerHeight)
+        const p = Math.min(1, Math.max(0, -rect.top / runway))
+        heroProgressRef.current = p
+        setHeroProgress((prev) => (Math.abs(prev - p) > 0.008 ? p : prev))
+        setOverHero(rect.bottom > 96)
+      }
+
+      // Determine active section for Scrollspy Header + Stanza27 Arc Journey Tracker
+      const sectionIds = ['hero', 'about', 'platform', 'map', 'specifications', 'faq', 'contact']
+      let current = 'hero'
+      const probeY = window.innerHeight * 0.38
+      for (const id of sectionIds) {
+        const el = document.getElementById(id)
+        if (el) {
+          const r = el.getBoundingClientRect()
+          if (r.top <= probeY) {
+            current = id
+          }
+        }
+      }
+      setActiveSection((prev) => (prev === current ? prev : current))
     }
 
     const step = () => {
@@ -291,12 +357,12 @@ function useAwwwardsSmoothScroll() {
       if (Math.abs(diff) > 0.45) {
         currentY += diff * 0.1
         window.scrollTo(0, Math.round(currentY))
-        updateProgress()
+        syncScrollState()
         rafId = window.requestAnimationFrame(step)
       } else {
         currentY = targetY
         window.scrollTo(0, Math.round(targetY))
-        updateProgress()
+        syncScrollState()
         isAnimating = false
       }
     }
@@ -310,9 +376,7 @@ function useAwwwardsSmoothScroll() {
 
     const onWheel = (event) => {
       if (reducedMotion || !finePointer) return
-      if (document.body.style.overflow === 'hidden') return
       if (event.ctrlKey || event.metaKey) return
-
       event.preventDefault()
       const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
       const delta =
@@ -321,17 +385,16 @@ function useAwwwardsSmoothScroll() {
           : event.deltaMode === 2
             ? event.deltaY * window.innerHeight
             : event.deltaY
-
-      targetY = Math.min(maxScroll, Math.max(0, targetY + delta * 0.95))
+      targetY = Math.min(maxScroll, Math.max(0, targetY + delta * 0.92))
       startLoop()
     }
 
-    const onNativeScroll = () => {
+    const onScroll = () => {
       if (!isAnimating) {
         currentY = window.scrollY
         targetY = window.scrollY
       }
-      updateProgress()
+      syncScrollState()
     }
 
     const onAnchorClick = (event) => {
@@ -341,17 +404,13 @@ function useAwwwardsSmoothScroll() {
       if (!hash || hash.length < 2) return
       const targetEl = document.querySelector(hash)
       if (!targetEl) return
-
       event.preventDefault()
-      const headerOffset = 78
+
       const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
       const destY =
-        hash === '#top'
+        hash === '#hero' || hash === '#top'
           ? 0
-          : Math.min(
-              maxScroll,
-              Math.max(0, targetEl.getBoundingClientRect().top + window.scrollY - headerOffset)
-            )
+          : Math.min(maxScroll, Math.max(0, targetEl.getBoundingClientRect().top + window.scrollY - 76))
 
       if (reducedMotion || !finePointer) {
         window.scrollTo({ top: destY, behavior: reducedMotion ? 'auto' : 'smooth' })
@@ -363,16 +422,15 @@ function useAwwwardsSmoothScroll() {
       window.history.pushState(null, '', hash)
     }
 
-    updateProgress()
+    syncScrollState()
     window.addEventListener('wheel', onWheel, { passive: false })
-    window.addEventListener('scroll', onNativeScroll, { passive: true })
-    window.addEventListener('resize', updateProgress, { passive: true })
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', syncScrollState, { passive: true })
     document.addEventListener('click', onAnchorClick)
 
-    // Scroll-triggered staggered section & card reveals
+    // Scroll reveal observer
     const revealNodes = document.querySelectorAll('[data-reveal]')
     let observer = null
-
     if ('IntersectionObserver' in window && !reducedMotion) {
       observer = new IntersectionObserver(
         (entries) => {
@@ -383,224 +441,64 @@ function useAwwwardsSmoothScroll() {
             }
           })
         },
-        { threshold: 0.12, rootMargin: '0px 0px -48px 0px' }
+        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
       )
-      revealNodes.forEach((node) => {
-        node.classList.add('reveal-ready')
-        observer.observe(node)
+      revealNodes.forEach((n) => {
+        n.classList.add('reveal-ready')
+        observer.observe(n)
       })
     } else {
-      revealNodes.forEach((node) => node.classList.add('is-revealed'))
+      revealNodes.forEach((n) => n.classList.add('is-revealed'))
     }
 
     return () => {
       window.removeEventListener('wheel', onWheel)
-      window.removeEventListener('scroll', onNativeScroll)
-      window.removeEventListener('resize', updateProgress)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', syncScrollState)
       document.removeEventListener('click', onAnchorClick)
       if (rafId) window.cancelAnimationFrame(rafId)
       if (observer) observer.disconnect()
     }
   }, [])
-}
 
-function IntroLoader() {
-  const [phase, setPhase] = useState('active')
-  const exitTimerRef = useRef(null)
-  const doneTimerRef = useRef(null)
-  const safetyTimerRef = useRef(null)
-
-  const beginExit = (exitDuration = 760) => {
-    setPhase((current) => {
-      if (current !== 'active') return current
-      doneTimerRef.current = window.setTimeout(() => {
-        setPhase('done')
-      }, exitDuration)
-      return 'exiting'
+  // Citadel sliding scrollspy underline indicator
+  useEffect(() => {
+    const listEl = navListRef.current
+    if (!listEl) return
+    const activeLink = listEl.querySelector(`a[href="#${activeSection}"]`)
+    if (!activeLink) {
+      setNavIndicator({ left: 0, width: 0 })
+      return
+    }
+    const listRect = listEl.getBoundingClientRect()
+    const linkRect = activeLink.getBoundingClientRect()
+    setNavIndicator({
+      left: linkRect.left - listRect.left,
+      width: linkRect.width,
     })
-  }
+  }, [activeSection])
 
-  useEffect(() => {
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const minDuration = reducedMotion ? 450 : 2100
-    const exitDuration = reducedMotion ? 320 : 760
+  // Compute hero opening & final phase visibilities (Citadel pinned sequence)
+  const openingOpacity = Math.max(0, 1 - heroProgress * 2.2)
+  const openingShift = heroProgress * -44
+  const finalProgress = Math.min(1, Math.max(0, (heroProgress - 0.34) / 0.42))
 
-    let minElapsed = false
-    let pageLoaded = document.readyState === 'complete'
-
-    const tryFinish = () => {
-      if (minElapsed && pageLoaded) {
-        beginExit(exitDuration)
-      }
-    }
-
-    const onWindowLoad = () => {
-      pageLoaded = true
-      tryFinish()
-    }
-
-    if (!pageLoaded) {
-      window.addEventListener('load', onWindowLoad)
-    }
-
-    exitTimerRef.current = window.setTimeout(() => {
-      minElapsed = true
-      tryFinish()
-    }, minDuration)
-
-    safetyTimerRef.current = window.setTimeout(() => {
-      beginExit(exitDuration)
-    }, reducedMotion ? 900 : 3800)
-
-    return () => {
-      window.removeEventListener('load', onWindowLoad)
-      window.clearTimeout(exitTimerRef.current)
-      window.clearTimeout(doneTimerRef.current)
-      window.clearTimeout(safetyTimerRef.current)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (phase === 'active') {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [phase])
-
-  if (phase === 'done') return null
-
-  return (
-    <div
-      className={`intro-loader ${phase === 'exiting' ? 'is-exiting' : ''}`}
-      role="status"
-      aria-live="polite"
-      aria-label="Loading Pedasenticom"
-    >
-      <div className="intro-curtain intro-curtain-top" aria-hidden="true" />
-      <div className="intro-curtain intro-curtain-bottom" aria-hidden="true" />
-      <div className="intro-seam" aria-hidden="true" />
-
-      <div className="intro-stage">
-        <div className="intro-emblem-wrap">
-          <span className="intro-ripple ripple-one" aria-hidden="true" />
-          <span className="intro-ripple ripple-two" aria-hidden="true" />
-          <span className="intro-orbit" aria-hidden="true" />
-
-          <svg
-            className="intro-hex-svg"
-            viewBox="0 0 200 200"
-            fill="none"
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient id="pedasenticomHexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#38bdf8" />
-                <stop offset="55%" stopColor="#bae6fd" />
-                <stop offset="100%" stopColor="#e0b45c" />
-              </linearGradient>
-            </defs>
-            <polygon
-              className="intro-hex-outer"
-              points="100,12 176.2,56 176.2,144 100,188 23.8,144 23.8,56"
-              pathLength="100"
-              stroke="url(#pedasenticomHexGrad)"
-              strokeWidth="2.4"
-              strokeLinejoin="round"
-            />
-            <polygon
-              className="intro-hex-inner"
-              points="100,24 165.8,62 165.8,138 100,176 34.2,138 34.2,62"
-              pathLength="100"
-              stroke="rgba(56, 189, 248, 0.36)"
-              strokeWidth="1.2"
-              strokeLinejoin="round"
-            />
-            {hexNodes.map((node, index) => (
-              <circle
-                key={index}
-                className="intro-hex-node"
-                cx={node.cx}
-                cy={node.cy}
-                r="3.2"
-                style={{ animationDelay: `${0.16 + index * 0.1}s` }}
-              />
-            ))}
-          </svg>
-
-          <div className="intro-crest-frame">
-            <img src="/pedasenticom-mark.png" alt="Pedasenticom crest" width="146" height="146" />
-            <span className="intro-crest-sheen" aria-hidden="true" />
-          </div>
-        </div>
-
-        <div className="intro-wordmark">
-          <div className="intro-title-mask">
-            <span className="intro-title">
-              PEDA<span className="intro-title-accent">SENTICOM</span>
-            </span>
-          </div>
-          <p className="intro-slogan">Inspired to Advance Your Global Reach</p>
-        </div>
-
-        <div className="intro-progress" aria-hidden="true">
-          <div className="intro-progress-bar" />
-        </div>
-      </div>
-
-      <button
-        type="button"
-        className="intro-skip"
-        onClick={() => {
-          window.clearTimeout(exitTimerRef.current)
-          window.clearTimeout(safetyTimerRef.current)
-          beginExit(620)
-        }}
-      >
-        Skip intro
-      </button>
-    </div>
+  // Map current section to Stanza27 Journey step index
+  const currentJourneyIndex = Math.max(
+    0,
+    journeySteps.findIndex((s) => s.id === (activeSection === 'faq' ? 'specifications' : activeSection))
   )
-}
+  const currentJourney = journeySteps[currentJourneyIndex] || journeySteps[0]
 
-function App() {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [heroMode, setHeroMode] = useState('showcase')
-  const [activeModuleId, setActiveModuleId] = useState('portal')
-  const [openFaqIndex, setOpenFaqIndex] = useState(0)
-  const heroRef = useRef(null)
-
-  useAwwwardsSmoothScroll()
-
-  const closeMenu = () => setMenuOpen(false)
-  const activeModule =
-    platformModules.find((m) => m.id === activeModuleId) || platformModules[0]
-  const currentHeroMode =
-    heroModes.find((m) => m.id === heroMode) || heroModes[0]
-
-  const handleHeroPointerMove = (event) => {
-    const el = heroRef.current
+  const jumpToSection = (id) => {
+    const el = document.getElementById(id)
     if (!el) return
-    const rect = el.getBoundingClientRect()
-    const x = (event.clientX - rect.left) / rect.width
-    const y = (event.clientY - rect.top) / rect.height
-    const tiltY = ((x - 0.5) * 7).toFixed(2)
-    const tiltX = ((0.5 - y) * 6).toFixed(2)
-    el.style.setProperty('--hero-mx', `${(x * 100).toFixed(1)}%`)
-    el.style.setProperty('--hero-my', `${(y * 100).toFixed(1)}%`)
-    el.style.setProperty('--rig-tilt-x', `${tiltX}deg`)
-    el.style.setProperty('--rig-tilt-y', `${tiltY}deg`)
+    const top = id === 'hero' ? 0 : el.getBoundingClientRect().top + window.scrollY - 76
+    window.scrollTo({ top, behavior: 'smooth' })
   }
 
-  const handleHeroPointerLeave = () => {
-    const el = heroRef.current
-    if (!el) return
-    el.style.setProperty('--rig-tilt-x', '0deg')
-    el.style.setProperty('--rig-tilt-y', '0deg')
-  }
+  const activeCase = platformCaseStudies[caseIdx] || platformCaseStudies[0]
+  const activeAboutSlide = aboutSlides[aboutSlideIdx] || aboutSlides[0]
 
   return (
     <div className="site-shell" id="top">
@@ -608,12 +506,10 @@ function App() {
         <div className="scroll-progress-fill" />
       </div>
 
-      <IntroLoader />
-
-      {/* TOP GLOBAL NAVIGATION BAR */}
-      <header className="global-header">
-        <div className="container global-nav">
-          <a className="brand-lockup" href="#top" onClick={closeMenu}>
+      {/* CITADEL SCROLLSPY HEADER + STANZA27 SOUND TOGGLE & CORNER-BRACKET CONTACT */}
+      <header className={`citadel-header ${overHero ? 'is-over-hero' : 'is-scrolled'}`}>
+        <div className="container citadel-header-inner">
+          <a className="brand-lockup" href="#hero" onClick={closeMenu}>
             <span className="brand-crest">
               <img
                 src="/pedasenticom-mark.png"
@@ -623,522 +519,529 @@ function App() {
                 decoding="async"
               />
             </span>
-            <span className="brand-copy">
-              <span className="brand-title">PEDASENTICOM</span>
-              <span className="brand-meta">Education &amp; Technology · Zimbabwe</span>
+            <span className="brand-text-wrap">
+              <span className="brand-wordmark">PEDASENTICOM</span>
+              <span className="brand-sub">Harare, Zimbabwe · CIPZ</span>
             </span>
           </a>
 
-          <button
-            className="mobile-menu-btn"
-            type="button"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle navigation"
-            aria-expanded={menuOpen}
-          >
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-
-          <nav className={`primary-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
-            <a href="#spotlight" onClick={closeMenu}>Edu-Connect Platform</a>
-            <a href="#roles" onClick={closeMenu}>School Roles</a>
-            <a href="#infrastructure" onClick={closeMenu}>Cloud &amp; Partners</a>
-            <a href="#specifications" onClick={closeMenu}>Specifications</a>
-            <a href="#faq" onClick={closeMenu}>FAQ</a>
-            <a className="header-cta" href="#contact" onClick={closeMenu}>
-              Onboard a School <ArrowUpRight size={15} />
-            </a>
+          <nav className={`citadel-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Primary">
+            <ul className="citadel-nav-list" ref={navListRef}>
+              {navSections.map((item) => (
+                <li key={item.id}>
+                  <a
+                    href={`#${item.id}`}
+                    className={activeSection === item.id ? 'is-active' : ''}
+                    onClick={closeMenu}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <span
+              className="citadel-nav-indicator"
+              aria-hidden="true"
+              style={{
+                transform: `translateX(${navIndicator.left}px)`,
+                width: `${navIndicator.width}px`,
+              }}
+            />
           </nav>
+
+          <div className="header-actions">
+            <button
+              type="button"
+              className={`sound-toggle ${soundOn ? 'is-on' : ''}`}
+              aria-pressed={soundOn}
+              aria-label={soundOn ? 'Mute ambient sound' : 'Play ambient sound'}
+              title={soundOn ? 'Mute ambient sound' : 'Ambient sound'}
+              onClick={toggleAmbientSound}
+            >
+              <span className="sound-bars" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+                <i />
+                <i />
+              </span>
+            </button>
+
+            <a className="bracket-btn" href="#contact" onClick={closeMenu}>
+              <span>Contact</span>
+            </a>
+
+            <button
+              type="button"
+              className="mobile-menu-btn"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle navigation menu"
+              aria-expanded={menuOpen}
+            >
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
       </header>
 
-      <main>
-        {/* STANDOUT AWWWARDS + GEFORCE NOW ARCHITECTURAL HERO STAGE */}
-        <section
-          className="hero-stage"
-          ref={heroRef}
-          onPointerMove={handleHeroPointerMove}
-          onPointerLeave={handleHeroPointerLeave}
-        >
-          <div className="hero-spotlight-beam" aria-hidden="true" />
-          <div className="hero-backdrop-grid" aria-hidden="true" />
-          <div className="hero-horizon-glow" aria-hidden="true" />
+      <main id="main-content">
+        {/* CITADEL PINNED SCROLL SEQUENCE HERO + STANZA27 GLOWING ECLIPSE & STARFIELD */}
+        <section id="hero" className="citadel-hero" ref={heroSectionRef} aria-label="Pedasenticom Hero">
+          <div className="citadel-hero-pin">
+            <EclipseCanvas scrollProgressRef={heroProgressRef} />
+            <div className="hero-veil" aria-hidden="true" />
 
-          <div className="container hero-layout">
-            <div className="hero-lead">
-              <div className="hero-status-architecture">
-                <div className="product-series-bar">
-                  <span className="series-led" aria-hidden="true" />
-                  <span className="series-tag">FLAGSHIP PLATFORM</span>
-                  <span className="series-divider" />
-                  <span className="series-name">EDU-CONNECT (PEDACOM)</span>
-                </div>
-                <span className="jurisdiction-pill">CIPZ REGISTERED · HARARE, ZW</span>
-              </div>
-
-              <h1 className="hero-monumental-title">
-                <span className="title-line">Integrated Digital</span>
-                <span className="title-line">Infrastructure for</span>
-                <span className="title-line accent-line">Schools in Zimbabwe.</span>
+            {/* PHASE 1: WIDE-SPACED GLOWING MONUMENTAL OPENING */}
+            <div
+              className="hero-phase hero-phase--opening container"
+              style={{
+                opacity: openingOpacity,
+                transform: `translateY(${openingShift}px)`,
+                pointerEvents: openingOpacity > 0.15 ? 'auto' : 'none',
+              }}
+            >
+              <p className="hero-odyssey-kicker">
+                CIPZ REGISTERED · HARARE, ZIMBABWE · FLAGSHIP EDU-CONNECT (PEDACOM)
+              </p>
+              <h1 className="hero-wide-title">
+                PEDASENTICOM
               </h1>
-
-              <p className="hero-subcopy">
-                <strong>Pedasenticom</strong> is an education and technology company headquartered in{' '}
-                <strong>Harare, Zimbabwe</strong> and registered under <strong>CIPZ</strong>. Through{' '}
-                <strong>Edu-Connect</strong> (transitioning to <strong>Pedacom</strong>), we unite school
-                administration, Android classroom workflows, parent engagement, and dual-currency{' '}
-                <strong>USD &amp; ZiG EcoCash</strong> payments on one cloud platform.
+              <p className="hero-wide-subtitle">
+                CONNECTING HOME &amp; SCHOOL THROUGH INTEGRATED DIGITAL INFRASTRUCTURE
+              </p>
+              <p className="hero-opening-lede">
+                An education and technology company uniting school administration, Android classroom workflows,
+                parent engagement, and dual-currency USD &amp; ZiG EcoCash payments across Zimbabwe.
               </p>
 
-              <div className="hero-cta-row">
-                <a className="btn-primary-gold" href="#contact">
-                  Deploy at Your School <ArrowUpRight size={17} />
+              <div className="hero-opening-actions">
+                <a className="bracket-btn bracket-btn--gold" href="#contact">
+                  <span>Onboard a School</span>
+                  <ArrowUpRight size={15} />
                 </a>
-                <a className="btn-outline-cyan" href="#spotlight">
-                  Inspect Platform Modules <ChevronDown size={16} />
+                <a className="bracket-btn" href="#about">
+                  <span>Explore Platform</span>
                 </a>
               </div>
+            </div>
 
-              <div className="hero-spec-strip" aria-label="Core platform capabilities">
-                <div className="spec-cell">
-                  <span className="spec-index">01 // PAYMENTS</span>
-                  <span className="spec-number">USD &amp; ZiG</span>
-                  <span className="spec-caption">EcoCash Fee &amp; Store Gateway</span>
+            {/* PHASE 2: CITADEL SCROLL-REVEALED STATEMENT + KEY METRICS */}
+            <div
+              className="hero-phase hero-phase--finale container"
+              style={{
+                opacity: finalProgress,
+                transform: `translateY(${(1 - finalProgress) * 32}px)`,
+                pointerEvents: finalProgress > 0.2 ? 'auto' : 'none',
+              }}
+            >
+              <p className="hero-finale-kicker">EDU-CONNECT · TRANSITIONING TO PEDACOM</p>
+              <div className="hero-finale-heading" aria-hidden="true">
+                {HERO_FINAL_LINES.map((line, lIdx) => (
+                  <span className="finale-line" key={line}>
+                    {line.split('').map((ch, cIdx) => {
+                      const threshold = (lIdx * 14 + cIdx) / 34
+                      const visible = finalProgress > threshold * 0.72
+                      return (
+                        <span
+                          key={cIdx}
+                          className={`finale-letter ${visible ? 'is-in' : ''}`}
+                        >
+                          {ch === ' ' ? '\u00A0' : ch}
+                        </span>
+                      )
+                    })}
+                  </span>
+                ))}
+              </div>
+              <p className="hero-finale-sub">
+                From Harare headquarters to primary and secondary campuses nationwide—one secure cloud
+                ecosystem for administrators, teachers, and parents.
+              </p>
+
+              <div className="citadel-hero-metrics" aria-label="Pedasenticom platform highlights">
+                <div className="hero-metric">
+                  <p className="hero-metric-val">USD &amp; ZiG</p>
+                  <p className="hero-metric-lbl">Dual-Currency EcoCash Tuition &amp; Uniform Payments</p>
                 </div>
-                <div className="spec-cell">
-                  <span className="spec-index">02 // CLIENTS</span>
-                  <span className="spec-number">Web + Android</span>
-                  <span className="spec-caption">Admin Portal &amp; Mobile App</span>
+                <div className="hero-metric">
+                  <p className="hero-metric-val">5-Role</p>
+                  <p className="hero-metric-lbl">Server-Enforced Cloud RBAC &amp; School Data Isolation</p>
                 </div>
-                <div className="spec-cell">
-                  <span className="spec-index">03 // GOVERNANCE</span>
-                  <span className="spec-number">5-Role RBAC</span>
-                  <span className="spec-caption">Multi-Tenant Cloud Security</span>
+                <div className="hero-metric">
+                  <p className="hero-metric-val">Web + Android</p>
+                  <p className="hero-metric-lbl">Unified Administrative Portal &amp; Classroom Mobile App</p>
                 </div>
               </div>
             </div>
 
-            {/* 3D INTERACTIVE COMMAND RIG */}
-            <div className="hero-rig-perspective">
-              <div className="floating-hud hud-top-left" aria-hidden="true">
-                <span className="hud-kicker">CLOUD TENANCY</span>
-                <strong>5-Role RBAC · HTTPS</strong>
-              </div>
+            {/* STANZA27 SCROLL CUE */}
+            <button
+              type="button"
+              className="scroll-cue"
+              aria-label="Scroll to About Pedasenticom"
+              onClick={() => jumpToSection('about')}
+            >
+              <svg
+                viewBox="0 0 22 42"
+                width="22"
+                height="42"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path className="scroll-cue-up" d="M7 6 11 2 15 6" />
+                <rect x="4" y="10" width="14" height="22" rx="7" />
+                <path d="M11 14v4" />
+                <path className="scroll-cue-down" d="M7 36 11 40 15 36" />
+              </svg>
+            </button>
+          </div>
+          <div className="citadel-hero-runway" aria-hidden="true" />
+        </section>
 
-              <div className="floating-hud hud-bottom-right" aria-hidden="true">
-                <span className="hud-kicker">SETTLEMENT ENGINE</span>
-                <strong>EcoCash USD &amp; ZiG Live</strong>
-              </div>
+        {/* CITADEL 50/50 SPLIT EDITORIAL ABOUT + INTERACTIVE SHOWCASE GALLERY */}
+        <section id="about" className="citadel-about" aria-labelledby="about-title" data-reveal>
+          <div className="about-split">
+            <div className="about-column-copy">
+              <div className="about-copy-inner">
+                <p className="editorial-kicker">ABOUT PEDASENTICOM · EDUCATION &amp; TECHNOLOGY</p>
+                <h2 id="about-title">SERVING SCHOOLS ACROSS ZIMBABWE</h2>
 
-              <div className="display-frame">
-                <div className="display-glare" aria-hidden="true" />
-
-                <div className="display-topbar">
-                  <span className="display-title">{currentHeroMode.caption}</span>
-                  <span className="display-region">HARARE · ZIMBABWE</span>
+                <div className="about-paragraphs">
+                  <p>
+                    <strong>Pedasenticom</strong> is an education and technology (EdTech) company
+                    headquartered in <strong>Harare, Zimbabwe</strong> and officially registered under{' '}
+                    <strong>CIPZ</strong> (Companies and Intellectual Property Zimbabwe). Through our
+                    flagship platform—<strong>Edu-Connect</strong> (transitioning to <strong>Pedacom</strong>
+                    )—we bridge the operational and communication gap between schools, teachers, and families.
+                  </p>
+                  <p>
+                    Engineered in partnership with <strong>Split Technologies</strong>, Pedasenticom unites a
+                    central administrative web portal with a dedicated Android mobile application. Schools
+                    manage attendance, academic records, multi-currency fee balances, and online uniform
+                    stores from one dashboard while parents monitor daily student progress and complete USD or
+                    ZiG EcoCash payments directly from their phones.
+                  </p>
                 </div>
 
-                {/* INTERACTIVE HERO VIEW SWITCHER */}
-                <div className="hero-mode-tabs" role="tablist" aria-label="Hero showcase view">
-                  {heroModes.map((mode) => (
-                    <button
-                      key={mode.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={heroMode === mode.id}
-                      className={`hero-mode-btn ${heroMode === mode.id ? 'is-active' : ''}`}
-                      onClick={() => setHeroMode(mode.id)}
-                    >
-                      <span className="mode-code">{mode.code}</span>
-                      <span className="mode-label">{mode.label}</span>
-                    </button>
-                  ))}
+                <div className="about-network-stat">
+                  <div className="about-network-label">
+                    Registered Under CIPZ &amp; Empowering Zimbabwean Schools
+                  </div>
+                  <div className="about-network-accent">2026</div>
                 </div>
+              </div>
+            </div>
 
-                <div className="display-screen">
-                  {heroMode === 'showcase' && (
-                    <div className="hero-view-showcase">
+            <div className="about-column-media">
+              <div className="about-gallery" role="region" aria-label="Pedasenticom platform gallery">
+                <div className="about-slide-stage">
+                  <span className="slide-eyebrow">{activeAboutSlide.eyebrow}</span>
+                  <h3>{activeAboutSlide.title}</h3>
+
+                  {activeAboutSlide.type === 'image' ? (
+                    <div className="slide-image-wrap">
                       <img
-                        src="/pedasenticom-logo.jpg"
-                        alt="Pedasenticom — Inspired to Advance Your Global Reach"
+                        src={activeAboutSlide.src}
+                        alt={activeAboutSlide.alt}
                         width="1024"
                         height="559"
                         decoding="async"
                       />
-                      <div className="showcase-overlay-bar">
-                        <span>OFFICIAL BRAND IDENTITY // PEDASENTICOM</span>
-                        <span>INSPIRED TO ADVANCE YOUR GLOBAL REACH</span>
+                    </div>
+                  ) : (
+                    <div className="slide-console-box">
+                      <div className="slide-console-metrics">
+                        {activeAboutSlide.metrics.map((m) => (
+                          <div key={m.k}>
+                            <span>{m.k}</span>
+                            <strong>{m.v}</strong>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="slide-console-rows">
+                        {activeAboutSlide.lines.map(([label, status]) => (
+                          <div className="slide-console-row" key={label}>
+                            <span>{label}</span>
+                            <em>{status}</em>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}
 
-                  {heroMode === 'topology' && (
-                    <div className="hero-view-panel">
-                      <div className="topology-header">
-                        <span>MULTI-TENANT CLOUD ARCHITECTURE</span>
-                        <span className="status-chip">ALL NODES OPERATIONAL</span>
-                      </div>
-                      <div className="topology-grid">
-                        <div className="topology-node">
-                          <span className="node-step">NODE 01 // WEB PORTAL</span>
-                          <strong>School Admin Console</strong>
-                          <p>Term setup, fee structures, staff rosters, and uniform inventory.</p>
-                        </div>
-                        <div className="topology-node">
-                          <span className="node-step">NODE 02 // CLOUD API</span>
-                          <strong>Laravel 5-Role RBAC</strong>
-                          <p>Strict per-school tenant isolation and encrypted HTTPS enforcement.</p>
-                        </div>
-                        <div className="topology-node">
-                          <span className="node-step">NODE 03 // ANDROID APP</span>
-                          <strong>Teacher &amp; Parent App</strong>
-                          <p>Digital roll call, multimedia learning journals, and child reports.</p>
-                        </div>
-                        <div className="topology-node">
-                          <span className="node-step">NODE 04 // PAYMENT WORKER</span>
-                          <strong>EcoCash USD &amp; ZiG</strong>
-                          <p>Automated background payment verification and ledger reconciliation.</p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {heroMode === 'ledger' && (
-                    <div className="hero-view-panel">
-                      <div className="topology-header">
-                        <span>ECOCASH DUAL-CURRENCY SETTLEMENT ENGINE</span>
-                        <span className="status-chip gold">AUTO-RECONCILED</span>
-                      </div>
-                      <div className="ledger-list">
-                        <div className="ledger-item">
-                          <div>
-                            <strong>Term Tuition &amp; Levy Settlement</strong>
-                            <span>EcoCash Mobile Prompt · Instant Parent Receipt</span>
-                          </div>
-                          <span className="ledger-currency">USD / ZiG</span>
-                        </div>
-                        <div className="ledger-item">
-                          <div>
-                            <strong>Digital School Uniform Store Order</strong>
-                            <span>Inventory Reserved · Background Worker Verified</span>
-                          </div>
-                          <span className="ledger-currency">VERIFIED</span>
-                        </div>
-                        <div className="ledger-item">
-                          <div>
-                            <strong>School Finance Ledger Sync</strong>
-                            <span>Real-Time Balance Update on Admin Web Portal</span>
-                          </div>
-                          <span className="ledger-currency">LIVE SYNC</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  <p className="slide-caption">{activeAboutSlide.caption}</p>
                 </div>
 
-                <div className="display-telemetry">
-                  <div>
-                    <span className="telemetry-key">REGISTRATION</span>
-                    <strong className="telemetry-val">CIPZ Zimbabwe</strong>
+                <div className="gallery-controls">
+                  <div className="gallery-counter">
+                    0{aboutSlideIdx + 1} / 0{aboutSlides.length}
                   </div>
-                  <div>
-                    <span className="telemetry-key">FLAGSHIP</span>
-                    <strong className="telemetry-val">Edu-Connect (Pedacom)</strong>
-                  </div>
-                  <div>
-                    <span className="telemetry-key">PAYMENTS</span>
-                    <strong className="telemetry-val">EcoCash USD / ZiG</strong>
+                  <div className="gallery-arrows">
+                    <button
+                      type="button"
+                      className="gallery-arrow-btn"
+                      aria-label="Previous slide"
+                      onClick={() =>
+                        setAboutSlideIdx((aboutSlideIdx - 1 + aboutSlides.length) % aboutSlides.length)
+                      }
+                    >
+                      <ArrowLeft size={18} />
+                    </button>
+                    <button
+                      type="button"
+                      className="gallery-arrow-btn"
+                      aria-label="Next slide"
+                      onClick={() => setAboutSlideIdx((aboutSlideIdx + 1) % aboutSlides.length)}
+                    >
+                      <ArrowRight size={18} />
+                    </button>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* KINETIC ARCHITECTURAL TICKER RIBBON */}
-          <div className="hero-marquee" aria-label="Platform highlights">
-            <div className="marquee-track">
-              {[...marqueeItems, ...marqueeItems].map((item, idx) => (
-                <span className="marquee-item" key={idx}>
-                  <span className="marquee-diamond" aria-hidden="true" />
-                  {item}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* SUB-NAVIGATION ANCHOR BAR */}
-          <div className="subnav-bar">
-            <div className="container subnav-inner">
-              <span className="subnav-brand">EDU-CONNECT ARCHITECTURE</span>
-              <div className="subnav-links">
-                <a href="#spotlight">Interactive Modules</a>
-                <a href="#roles">Role Matrix</a>
-                <a href="#infrastructure">EcoCash &amp; Cloud</a>
-                <a href="#specifications">Corporate Specs</a>
-                <a href="#faq">Verified FAQ</a>
-                <a href="#contact">Direct Contact</a>
               </div>
             </div>
           </div>
         </section>
 
-        {/* INTERACTIVE PLATFORM SPOTLIGHT (TABBED MODULE SWITCHER + LIVE CONSOLE VIEW) */}
-        <section className="spotlight-section" id="spotlight" data-reveal>
+        {/* CITADEL DARK PARTNERS & ECOSYSTEM MARQUEE */}
+        <section id="partners" className="citadel-partners" aria-labelledby="partners-title" data-reveal>
           <div className="container">
-            <div className="section-banner">
+            <h2 id="partners-title" className="partners-heading">
+              <strong>Trusted partners.</strong> One connected school infrastructure network.
+            </h2>
+          </div>
+
+          <div className="partners-marquee-viewport">
+            <ul className="partners-marquee-track" role="list">
+              {[...partnerMarqueeItems, ...partnerMarqueeItems].map((item, idx) => (
+                <li className="partner-marquee-tile" key={idx} aria-hidden={idx >= partnerMarqueeItems.length}>
+                  <a
+                    href={item.href}
+                    target={item.external ? '_blank' : undefined}
+                    rel={item.external ? 'noopener noreferrer' : undefined}
+                  >
+                    <strong>{item.name}</strong>
+                    <span>{item.sub}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* CITADEL EDITORIAL PLATFORM MODULES CAROUSEL (ALTERNATING LIGHT/DARK SPLIT CARDS) */}
+        <section id="platform" className="citadel-cases" aria-labelledby="platform-title" data-reveal>
+          <div className="container">
+            <div className="cases-header">
               <div>
-                <p className="kicker-line">PLATFORM ARCHITECTURE // EDU-CONNECT (PEDACOM)</p>
-                <h2>One Cloud Ecosystem. Four Integrated Modules.</h2>
+                <p className="editorial-kicker gold">PLATFORM ARCHITECTURE · EDU-CONNECT (PEDACOM)</p>
+                <h2 id="platform-title">Four Integrated Pillars</h2>
               </div>
-              <p className="banner-summary">
-                Select any module below to inspect how Pedasenticom connects school leadership, classroom
-                educators, parents, and automated EcoCash finance.
-              </p>
+
+              <div className="cases-nav-controls">
+                <button
+                  type="button"
+                  className="case-arrow-btn"
+                  aria-label="Previous platform module"
+                  onClick={() =>
+                    setCaseIdx((caseIdx - 1 + platformCaseStudies.length) % platformCaseStudies.length)
+                  }
+                >
+                  <ArrowLeft size={18} />
+                </button>
+                <span className="cases-index-readout">
+                  0{caseIdx + 1} / 0{platformCaseStudies.length}
+                </span>
+                <button
+                  type="button"
+                  className="case-arrow-btn"
+                  aria-label="Next platform module"
+                  onClick={() => setCaseIdx((caseIdx + 1) % platformCaseStudies.length)}
+                >
+                  <ArrowRight size={18} />
+                </button>
+              </div>
             </div>
 
-            <div className="module-switcher-bar" role="tablist" aria-label="Platform modules">
-              {platformModules.map((mod) => (
+            <article className={`case-card case-card--${activeCase.theme}`}>
+              <div className="case-card-copy">
+                <span className="case-partner-tag">{activeCase.partnerLabel}</span>
+                <h3>{activeCase.title}</h3>
+                <p className="case-description">{activeCase.description}</p>
+
+                <ul className="case-specs-list">
+                  {activeCase.specs.map((sp) => (
+                    <li key={sp}>{sp}</li>
+                  ))}
+                </ul>
+
+                <div className="case-footer">
+                  <span className="case-category">{activeCase.category}</span>
+                  <a className="case-cta-btn" href="#contact">
+                    Request School Demo <ArrowUpRight size={15} />
+                  </a>
+                </div>
+              </div>
+
+              <div className="case-card-visual">
+                <div className="case-visual-frame">
+                  <div className="case-visual-top">
+                    <span>{activeCase.kicker}</span>
+                    <span>ZIMBABWE CLOUD</span>
+                  </div>
+
+                  {activeCase.visualType === 'logo' ? (
+                    <div className="case-visual-img">
+                      <img
+                        src="/pedasenticom-logo.jpg"
+                        alt="Pedasenticom Administrative Web Portal Showcase"
+                        width="1024"
+                        height="559"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                  ) : (
+                    <div className="case-visual-blueprint">
+                      <p className="blueprint-title">{activeCase.visualTitle}</p>
+                      <div className="blueprint-bars">
+                        <div className="blueprint-bar">
+                          <span>INSTITUTIONAL SYNC</span>
+                          <strong>REAL-TIME HTTPS</strong>
+                        </div>
+                        <div className="blueprint-bar">
+                          <span>ACCESS GOVERNANCE</span>
+                          <strong>5-ROLE RBAC ENFORCED</strong>
+                        </div>
+                        <div className="blueprint-bar">
+                          <span>PAYMENT ENGINE</span>
+                          <strong>ECOCASH USD &amp; ZiG</strong>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="case-visual-stats">
+                    {activeCase.visualStats.map((st) => (
+                      <div key={st.label}>
+                        <span>{st.label}</span>
+                        <strong>{st.val}</strong>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            {/* CITADEL SLIDE SELECTOR DOTS */}
+            <div className="case-dots" role="tablist" aria-label="Select platform module">
+              {platformCaseStudies.map((cs, i) => (
                 <button
-                  key={mod.id}
+                  key={cs.id}
                   type="button"
                   role="tab"
-                  aria-selected={activeModule.id === mod.id}
-                  className={`module-tab ${activeModule.id === mod.id ? 'is-selected' : ''}`}
-                  onClick={() => setActiveModuleId(mod.id)}
+                  aria-selected={i === caseIdx}
+                  className={`case-dot ${i === caseIdx ? 'is-active' : ''}`}
+                  onClick={() => setCaseIdx(i)}
                 >
-                  <span className="module-tab-code">{mod.code}</span>
-                  <span className="module-tab-name">{mod.tabLabel}</span>
+                  <span>0{i + 1} · {cs.category}</span>
                 </button>
               ))}
             </div>
+          </div>
+        </section>
 
-            <div className="spotlight-stage">
-              <div className="spotlight-copy">
-                <span className="module-audience">{activeModule.audience}</span>
-                <h3>{activeModule.title}</h3>
-                <p className="module-description">{activeModule.summary}</p>
+        {/* CITADEL INTERACTIVE REGIONAL MAP OF ZIMBABWE */}
+        <ZimbabweMap />
 
-                <div className="module-highlights">
-                  {activeModule.highlights.map((item) => (
-                    <div className="highlight-row" key={item.label}>
-                      <h4>{item.label}</h4>
-                      <p>{item.detail}</p>
-                    </div>
-                  ))}
+        {/* CORPORATE SPECIFICATIONS & VERIFIED PROFILE */}
+        <section id="specifications" className="specs-section" aria-labelledby="specs-title" data-reveal>
+          <div className="container specs-grid">
+            <div className="specs-lead">
+              <p className="editorial-kicker">ORGANIZATION &amp; TECHNICAL SPECIFICATIONS</p>
+              <h2 id="specs-title">Verified Corporate Profile</h2>
+              <p>
+                Pedasenticom&apos;s mission is to strengthen the partnership between schools, educators, and
+                parents through accessible, secure, and real-time digital tools across Zimbabwe and Southern
+                Africa.
+              </p>
+
+              <div className="specs-crest-card">
+                <img
+                  src="/pedasenticom-mark.png"
+                  alt="Pedasenticom official emblem"
+                  width="56"
+                  height="56"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div>
+                  <strong>PEDASENTICOM</strong>
+                  <span>Inspired to Advance Your Global Reach</span>
                 </div>
               </div>
+            </div>
 
-              <div className="spotlight-console" aria-label={`${activeModule.title} system preview`}>
-                <div className="console-header">
-                  <span className="console-title">{activeModule.consolePreview.windowTitle}</span>
-                  <span className="console-status">{activeModule.consolePreview.status}</span>
-                </div>
-
-                <div className="console-metrics">
-                  {activeModule.consolePreview.metrics.map((m) => (
-                    <div className="console-metric-box" key={m.label}>
-                      <span>{m.label}</span>
-                      <strong>{m.value}</strong>
-                    </div>
+            <div className="specs-table-box">
+              <table className="specs-table" aria-label="Pedasenticom corporate specifications">
+                <tbody>
+                  {corporateSpecs.map((row) => (
+                    <tr key={row.label}>
+                      <th scope="row">{row.label}</th>
+                      <td>
+                        {row.href ? (
+                          <a
+                            href={row.href}
+                            target={row.external === false ? undefined : '_blank'}
+                            rel={row.external === false ? undefined : 'noreferrer'}
+                            className="spec-link"
+                          >
+                            {row.value} <ArrowUpRight size={14} />
+                          </a>
+                        ) : (
+                          row.value
+                        )}
+                      </td>
+                    </tr>
                   ))}
-                </div>
-
-                <div className="console-table">
-                  {activeModule.consolePreview.rows.map((row) => (
-                    <div className="console-row" key={row.col1}>
-                      <div className="console-row-main">
-                        <strong>{row.col1}</strong>
-                        <span>{row.col2}</span>
-                      </div>
-                      <span className="console-badge">{row.badge}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
 
-        {/* STAKEHOLDER ROLE MATRIX */}
-        <section className="roles-section" id="roles" data-reveal>
+        {/* VERIFIED FAQ ACCORDION (PRE-RENDERED FULL DOM FOR GOOGLE SEO & AI OVERVIEW) */}
+        <section id="faq" className="faq-section" aria-labelledby="faq-title" data-reveal>
           <div className="container">
-            <div className="section-banner">
+            <div className="section-editorial-head">
               <div>
-                <p className="kicker-line">STAKEHOLDER CAPABILITIES // SCHOOL-TO-HOME</p>
-                <h2>Engineered for Every Role in the School Community.</h2>
+                <p className="editorial-kicker">FREQUENTLY ASKED QUESTIONS · VERIFIED FACTS</p>
+                <h2 id="faq-title">Questions About Pedasenticom in Zimbabwe</h2>
               </div>
-              <p className="banner-summary">
-                Pedasenticom replaces fragmented paper registers, manual fee receipts, and disconnected chat
-                groups with role-specific digital tools.
+              <p className="editorial-aside">
+                Key facts regarding Pedasenticom&apos;s CIPZ registration, Harare headquarters, Edu-Connect
+                (Pedacom) platform, and EcoCash school fee payments.
               </p>
             </div>
 
-            <div className="roles-grid">
-              {roleMatrix.map((group) => (
-                <article className="role-panel" key={group.role} data-reveal>
-                  <div className="role-panel-top">
-                    <span className="role-tag">{group.tag}</span>
-                    <h3>{group.role}</h3>
-                    <p className="role-subheadline">{group.headline}</p>
-                  </div>
-                  <ul className="role-spec-list">
-                    {group.points.map((pt) => (
-                      <li key={pt}>{pt}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* DARK INFRASTRUCTURE & PARTNERS BAND */}
-        <section className="infra-section" id="infrastructure" data-reveal>
-          <div className="container">
-            <div className="section-banner light">
-              <div>
-                <p className="kicker-line gold">CLOUD SCALE &amp; ECOSYSTEM PARTNERS</p>
-                <h2>Built for Primary &amp; Secondary Schools Across Zimbabwe.</h2>
-              </div>
-              <p className="banner-summary light">
-                Multi-tenant cloud architecture allows institutions in Harare and across Southern Africa to
-                launch without dedicated on-premise servers.
-              </p>
-            </div>
-
-            <div className="infra-bento">
-              <article className="infra-card primary-span" data-reveal>
-                <span className="infra-eyebrow">MULTI-TENANT CLOUD BACKBONE</span>
-                <h3>Zero-Friction School Onboarding &amp; Strict Data Isolation</h3>
-                <p>
-                  Every institution onboarded onto Edu-Connect (Pedacom) operates within an isolated tenant
-                  boundary enforced by 5-role server-side access control. School administrators control academic
-                  years, fee structures, uniform inventory, and verified guardian links from day one.
-                </p>
-                <div className="infra-stat-bar">
-                  <div>
-                    <strong>Primary &amp; Secondary</strong>
-                    <span>Institution Ready</span>
-                  </div>
-                  <div>
-                    <strong>USD &amp; ZiG</strong>
-                    <span>Dual-Currency Ledgers</span>
-                  </div>
-                  <div>
-                    <strong>Harare, Zimbabwe</strong>
-                    <span>CIPZ Registered</span>
-                  </div>
-                </div>
-              </article>
-
-              {partners.map((partner) => (
-                <article className="infra-card" key={partner.name} data-reveal>
-                  <span className="infra-eyebrow">{partner.role}</span>
-                  <h3>{partner.name}</h3>
-                  <p>{partner.description}</p>
-                  {partner.href && (
-                    <a
-                      className="infra-link"
-                      href={partner.href}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {partner.linkLabel} <ArrowUpRight size={15} />
-                    </a>
-                  )}
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ENTERPRISE SPECIFICATION SHEET & CORPORATE PROFILE */}
-        <section className="specs-section" id="specifications" data-reveal>
-          <div className="container">
-            <div className="specs-layout">
-              <div className="specs-intro">
-                <p className="kicker-line">CORPORATE &amp; TECHNICAL SPECIFICATIONS</p>
-                <h2>Verified Organization &amp; Platform Profile.</h2>
-                <p>
-                  Pedasenticom&apos;s mission is to strengthen the partnership between schools, educators, and
-                  families through accessible, secure, and real-time digital infrastructure across Zimbabwe and
-                  Southern Africa.
-                </p>
-
-                <div className="spec-brand-plate">
-                  <img
-                    src="/pedasenticom-mark.png"
-                    alt="Pedasenticom official emblem"
-                    width="56"
-                    height="56"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div>
-                    <strong>PEDASENTICOM</strong>
-                    <span>Inspired to Advance Your Global Reach</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="specs-table-wrap">
-                <table className="specs-table" aria-label="Pedasenticom corporate and technical specifications">
-                  <tbody>
-                    {corporateSpecs.map((row) => (
-                      <tr key={row.label}>
-                        <th scope="row">{row.label}</th>
-                        <td>
-                          {row.href ? (
-                            <a
-                              href={row.href}
-                              target={row.external === false ? undefined : '_blank'}
-                              rel={row.external === false ? undefined : 'noreferrer'}
-                              className="spec-table-link"
-                            >
-                              {row.value} <ArrowUpRight size={14} />
-                            </a>
-                          ) : (
-                            row.value
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* INTERACTIVE ACCORDION FAQ (GEFORCE NOW STYLE + FULL DOM FOR GOOGLE SEO) */}
-        <section className="faq-section" id="faq" data-reveal>
-          <div className="container">
-            <div className="section-banner">
-              <div>
-                <p className="kicker-line">FREQUENTLY ASKED QUESTIONS // VERIFIED ENTITY FACTS</p>
-                <h2>Questions About Pedasenticom &amp; Edu-Connect.</h2>
-              </div>
-              <p className="banner-summary">
-                Direct answers regarding Pedasenticom&apos;s CIPZ registration, Harare headquarters, platform
-                modules, and EcoCash school fee integration.
-              </p>
-            </div>
-
-            <div className="faq-accordion">
+            <div className="faq-list">
               {faqs.map((item, idx) => {
                 const isOpen = openFaqIndex === idx
                 return (
-                  <article className={`faq-item ${isOpen ? 'is-open' : ''}`} key={item.question}>
+                  <article className={`faq-row ${isOpen ? 'is-open' : ''}`} key={item.question}>
                     <button
                       type="button"
-                      className="faq-trigger"
+                      className="faq-btn"
                       aria-expanded={isOpen}
                       onClick={() => setOpenFaqIndex(isOpen ? -1 : idx)}
                     >
                       <span>{item.question}</span>
-                      <ChevronDown className="faq-chevron" size={20} />
+                      <ChevronDown className="faq-icon" size={20} />
                     </button>
-                    <div className="faq-content">
+                    <div className="faq-panel">
                       <p>{item.answer}</p>
                     </div>
                   </article>
@@ -1148,40 +1051,41 @@ function App() {
           </div>
         </section>
 
-        {/* DIRECT SCHOOL ONBOARDING & CONTACT STAGE */}
-        <section className="contact-stage" id="contact" data-reveal>
-          <div className="container contact-box">
-            <div className="contact-copy">
-              <p className="kicker-line gold">SCHOOL ONBOARDING &amp; PARTNERSHIPS</p>
-              <h2>Deploy Edu-Connect at Your Institution.</h2>
+        {/* SCHOOL ONBOARDING & DIRECT CONTACT STAGE */}
+        <section id="contact" className="contact-band" aria-labelledby="contact-title" data-reveal>
+          <div className="container contact-grid">
+            <div className="contact-left">
+              <p className="editorial-kicker gold">SCHOOL ONBOARDING · HARARE, ZIMBABWE</p>
+              <h2 id="contact-title">Partner With Pedasenticom.</h2>
               <p>
-                Partner with Pedasenticom—Zimbabwe&apos;s CIPZ-registered education and technology company in
-                Harare—to roll out unified school administration, Android teacher and parent workflows, and
-                automated USD &amp; ZiG EcoCash fee collection.
+                Bring Edu-Connect (Pedacom) to your primary or secondary institution—uniting school
+                administration, Android classroom workflows, parent visibility, and automated USD &amp; ZiG
+                EcoCash fee collection.
               </p>
             </div>
 
-            <div className="contact-actions-panel">
-              <div className="contact-channel">
-                <span className="channel-label">OFFICIAL EMAIL</span>
-                <a className="channel-value" href="mailto:Pedasenticom@gmail.com">
-                  Pedasenticom@gmail.com <ArrowUpRight size={18} />
+            <div className="contact-right">
+              <div className="contact-block">
+                <span>OFFICIAL EMAIL</span>
+                <a className="contact-email-link" href="mailto:Pedasenticom@gmail.com">
+                  Pedasenticom@gmail.com <ArrowUpRight size={20} />
                 </a>
               </div>
 
-              <div className="contact-channel">
-                <span className="channel-label">DIRECT PHONE &amp; WHATSAPP (HARARE, ZIMBABWE)</span>
-                <div className="channel-buttons">
-                  <a className="btn-primary-gold" href="tel:+263790543013">
-                    Call 0790543013
+              <div className="contact-block">
+                <span>DIRECT PHONE &amp; WHATSAPP</span>
+                <div className="contact-btn-row">
+                  <a className="bracket-btn bracket-btn--gold" href="tel:+263790543013">
+                    <span>Call 0790543013</span>
                   </a>
                   <a
-                    className="btn-outline-cyan"
+                    className="bracket-btn"
                     href="https://wa.me/263790543013"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    WhatsApp Chat <ArrowUpRight size={16} />
+                    <span>WhatsApp</span>
+                    <ArrowUpRight size={15} />
                   </a>
                 </div>
               </div>
@@ -1190,11 +1094,38 @@ function App() {
         </section>
       </main>
 
+      {/* STANZA27 CURVED ARC JOURNEY NAVIGATOR */}
+      <nav className="journey-arc-nav" aria-label="Page journey progress">
+        <svg className="journey-svg" viewBox="0 0 260 24" aria-hidden="true">
+          <path d="M 10 19 A 320 320 0 0 1 250 19" />
+        </svg>
+        <ol className="journey-dots">
+          {journeySteps.map((s, idx) => {
+            const isCurrent = idx === currentJourneyIndex
+            const isPassed = idx < currentJourneyIndex
+            return (
+              <li key={s.id}>
+                <button
+                  type="button"
+                  className={`journey-dot ${isCurrent ? 'is-current' : ''} ${isPassed ? 'is-passed' : ''}`}
+                  aria-current={isCurrent ? 'step' : undefined}
+                  aria-label={`${s.step} ${s.label}`}
+                  onClick={() => jumpToSection(s.id)}
+                />
+              </li>
+            )
+          })}
+        </ol>
+        <p className="journey-readout" aria-hidden="true">
+          {currentJourney.step} · {currentJourney.label.toUpperCase()}
+        </p>
+      </nav>
+
       {/* ENTERPRISE FOOTER */}
       <footer className="site-footer">
-        <div className="container footer-grid">
-          <div className="footer-col-brand">
-            <a className="brand-lockup" href="#top">
+        <div className="container footer-top">
+          <div className="footer-brand-col">
+            <a className="brand-lockup" href="#hero">
               <span className="brand-crest small">
                 <img
                   src="/pedasenticom-mark.png"
@@ -1205,33 +1136,32 @@ function App() {
                   decoding="async"
                 />
               </span>
-              <span className="brand-title">PEDASENTICOM</span>
+              <span className="brand-wordmark">PEDASENTICOM</span>
             </a>
             <p>
-              Education &amp; Technology company registered in Zimbabwe under CIPZ. Headquartered in Harare,
-              Zimbabwe.
+              Education &amp; Technology company headquartered in Harare, Zimbabwe and registered under CIPZ.
             </p>
           </div>
 
-          <div className="footer-col">
-            <h4>Platform</h4>
-            <a href="#spotlight">Administrative Web Portal</a>
-            <a href="#spotlight">Android Mobile Application</a>
-            <a href="#spotlight">EcoCash USD &amp; ZiG Gateway</a>
-            <a href="#roles">Stakeholder Roles</a>
+          <div className="footer-links-col">
+            <h4>Navigation</h4>
+            <a href="#about">About Pedasenticom</a>
+            <a href="#platform">Edu-Connect Platform</a>
+            <a href="#map">Zimbabwe Coverage</a>
+            <a href="#specifications">Specifications</a>
           </div>
 
-          <div className="footer-col">
-            <h4>Company</h4>
-            <a href="#specifications">Corporate Specifications</a>
-            <a href="#infrastructure">Technology Partners</a>
-            <a href="#faq">Frequently Asked Questions</a>
+          <div className="footer-links-col">
+            <h4>Ecosystem</h4>
+            <a href="#partners">Partners</a>
+            <a href="#faq">Verified FAQ</a>
             <a href="https://splittechnologies.co.zw" target="_blank" rel="noreferrer">
               Split Technologies
             </a>
+            <a href="https://pedasenticom.co.zw">pedasenticom.co.zw</a>
           </div>
 
-          <div className="footer-col">
+          <div className="footer-links-col">
             <h4>Contact</h4>
             <a href="mailto:Pedasenticom@gmail.com">Pedasenticom@gmail.com</a>
             <a href="tel:+263790543013">+263 790 543 013</a>
@@ -1243,12 +1173,10 @@ function App() {
         </div>
 
         <div className="container footer-bottom">
-          <span>© 2026 Pedasenticom (pedasenticom.co.zw). All rights reserved.</span>
-          <span>Flagship Product: Edu-Connect (Pedacom) · CIPZ Registered</span>
+          <span>© 2026 Pedasenticom (pedasenticom.co.zw) · CIPZ Registered in Zimbabwe</span>
+          <span>Flagship Product: Edu-Connect (Pedacom) · Engineered with Split Technologies</span>
         </div>
       </footer>
     </div>
   )
 }
-
-export default App
